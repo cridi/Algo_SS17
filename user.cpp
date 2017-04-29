@@ -12,7 +12,7 @@
 
 #ifndef _USE_OLD_OSTREAMS
 using namespace std;
-#endif
+#endif 
 
 
 
