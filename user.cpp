@@ -176,11 +176,13 @@ void user_main()
 		endpos = NetworkBuffer.find_first_of(seperator, startpos);
 		if (endpos == NetworkBuffer.npos)break;
 		token = NetworkBuffer.substr(startpos, endpos - startpos);
-		if ((wordCount == 1) & (token.compare("Nets"))) {
-			cout << "Couldn't find right format.";
-			break;
+
+		if (wordCount == 1) {
+			if (token.compare("Nets")&token.compare("nets")) {
+				cout << "Syntax Error: Unexpected Input Format.";
+				break;
+			}
 		}
-		else cout << "Network layout detected." << endl;
 
 		wordCount++;
 		cout << token << endl;
