@@ -1,0 +1,14 @@
+﻿  stdafx.cpp
+  Console.cpp
+  Shape.cpp
+  Graphicfunctions.cpp
+  Dib.cpp
+  user.cpp
+  MainFrm.cpp
+  GDE_3View.cpp
+  GDE_3Doc.cpp
+  GDE_3.cpp
+  Code wird generiert...
+GDE_3.obj : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /SAFESEH ignoriert.
+  GDE_3.vcxproj -> C:\Users\chris\Documents\Visual Studio 2017\Algo_SS17\Debug\GDE_3.exe
+  GDE_3.vcxproj -> Debug\GDE_3.pdb (Full PDB)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="GDE_3">
+</Property><Property Name="Projektmappendatei" Value="C:\Projekte\GDE\GDEall\GDE_3_2008\GDE_3.sln">
+</Property><Property Name="Benutzeroptionendatei" Value="C:\Projekte\GDE\GDEall\GDE_3_2008\GDE_3.suo">
+</Property><Property Name="Date" Value="Dienstag, 18. November 2008">
+</Property><Property Name="Time" Value="15:16">
+</Property><Property Name="Protokollnummer" Value="2">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="GDE_3.sln" Description="Datei wurde erfolgreich als &quot;C:\Projekte\GDE\GDEall\GDE_3_2008\GDE_3.sln.old&quot; gesichert">
+</Event><Event ErrorLevel="0" Project="" Source="GDE_3.suo" Description="Datei wurde erfolgreich als &quot;C:\Projekte\GDE\GDEall\GDE_3_2008\GDE_3.suo.old&quot; gesichert">
+</Event><Event ErrorLevel="0" Project="GDE_3" Source="GDE_3.vcproj" Description="Die Webbereitstellung auf dem lokalen IIS-Server wird nicht mehr unterstützt. Das Buildtool für die Webbereitstellung wurde aus den Projekteinstellungen entfernt.">
+</Event><Event ErrorLevel="1" Project="GDE_3" Source="GDE_3.vcproj" Description="Die Anwendung wurde aktualisiert und enthält nun auch Einstellungen für die Benutzerkontensteuerung (User Account Control, UAC) von Windows Vista. Standardmäßig wird die Anwendung beim Ausführen unter Windows Vista mit aktivierter Benutzerkontensteuerung so markiert, dass sie mit den gleichen Berechtigungen wie der Prozess ausgeführt wird, durch den sie gestartet wurde. Mit der Markierung wird auch das Ausführen der Anwendung mit Virtualisierung deaktiviert. Sie können die Einstellungen der Benutzerkontensteuerung über die Eigenschaftenseiten des Projekts ändern.">
+</Event><Event ErrorLevel="0" Project="GDE_3" Source="GDE_3.vcproj" Description="Die Projektdatei wurde erfolgreich als &quot;C:\Projekte\GDE\GDEall\GDE_3_2008\GDE_3.vcproj.8.00.old&quot; gesichert.">
+</Event><Event ErrorLevel="0" Project="GDE_3" Source="GDE_3.vcproj" Description="Das Projekt wurde erfolgreich aktualisiert.">
+</Event><Event ErrorLevel="3" Project="GDE_3" Source="GDE_3.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="GDE_3.sln" Description="Die Projektmappe wurde erfolgreich konvertiert.">
+</Event><Event ErrorLevel="3" Project="" Source="GDE_3.sln" Description="Converted">
+</Event></UpgradeLog>

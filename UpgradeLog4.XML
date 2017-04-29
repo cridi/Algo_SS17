@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="GDE_3">
+</Property><Property Name="Projektmappendatei" Value="D:\ProjekteC\GDE\GDEall\GDE_3_2010\GDE_3.sln">
+</Property><Property Name="Date" Value="Mittwoch, 6. November 2013">
+</Property><Property Name="Time" Value="20:31:10">
+</Property><Property Name="Protokollnummer" Value="4">
+</Property></Properties><Event ErrorLevel="0" Project="GDE_3" Source="GDE_3.vcproj" Description="Converting project file 'D:\ProjekteC\GDE\GDEall\GDE_3_2010\GDE_3.vcproj'.">
+</Event><Event ErrorLevel="1" Project="GDE_3" Source="GDE_3.vcproj" Description="VCWebServiceProxyGeneratorTool is no longer supported. The tool has been removed from your project settings.">
+</Event><Event ErrorLevel="1" Project="GDE_3" Source="GDE_3.vcproj" Description="Attribute 'Detect64BitPortabilityProblems' of 'VCCLCompilerTool' is not supported in this version and has been removed during conversion.">
+</Event><Event ErrorLevel="1" Project="GDE_3" Source="GDE_3.vcproj" Description="Attribute 'Detect64BitPortabilityProblems' of 'VCCLCompilerTool' is not supported in this version and has been removed during conversion.">
+</Event><Event ErrorLevel="0" Project="GDE_3" Source="GDE_3.vcproj" Description="Done converting to new project file 'D:\ProjekteC\GDE\GDEall\GDE_3_2010\GDE_3.vcxproj'.">
+</Event><Event ErrorLevel="3" Project="GDE_3" Source="GDE_3.vcproj" Description="Converted">
+</Event></UpgradeLog>
