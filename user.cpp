@@ -6,6 +6,7 @@
 #include "user.h"
 #include "graphics\graphicfunctions.h"
 
+#include <string>
 #include <iostream>
 #include <fstream>
 
@@ -24,6 +25,38 @@ using namespace std;
 
 COLORREF Colref[]={BLACK,RED,GREEN,BLUE,YELLOW,BROWN};
 int Colind=0;
+
+class _NET {
+public:
+	char INPUT;
+	char OUTPUT;
+	char CMN;
+	char INTERNAL;
+}net;
+
+class _RESISTOR {
+public:
+	char name;
+	int value;
+	char a_pin;
+	char b_pin;
+};
+class _INDUCTOR {
+public:
+	char name;
+	int value;
+	char a_pin;
+	char b_pin;
+};
+class _CONDENSATOR {
+public:
+	char name;
+	int value;
+	char a_pin;
+	char b_pin;
+};
+
+string NetworkBuffer;
 
 struct _BAUM {							// Die fuenf Eingangsparameter des Baumes.
 	int		Tiefe;
@@ -84,7 +117,7 @@ void Zeichne_Baum()
 	get_windowsize(&Weite, &Hoehe);
 	x = Weite / 2;
 	y = Hoehe*3/4;
-	text(x, y, 18, RED, "Wurzel [x,y]=[%d,%d", x,y);
+	text(x, y, 18, RED, "Wurzel [x,y]=[%d,%d]", x,y);
 
 	StammLaenge = (int)(y / GesamtWachstum);			// Laenge des Stammes.
 
@@ -116,128 +149,44 @@ void Restart()
 	printf("######################################\n\n");
 }
 
-struct _System {
-	
-} System;
-
 
 void user_main()
 {
 	int ww,hh;
-	set_windowpos(0,0,600,400);
+	set_windowpos(0, 0, 600, 400);
+
+	//USER PROGRAMM
+	cout << "Enter Network!\n";
+	getline(cin, NetworkBuffer);
+	cout << "Registered String\n" << NetworkBuffer << endl;
+	
+	string seperator = ": \t;,";
+	string token;
+	int endpos = 0;
+	int startpos = 0;
+	int wordCount = 1;
+
 	while (1) {								// Endlosschleife
 		get_windowsize(&ww, &hh);
-		set_drawarea(ww, hh);				// Setzen des Zeichenbereiches
+		set_drawarea(ww, hh);				// Setzen des Zeichenbereiches     
 		clrscr();
-		if (0) {//Eingeben der Generierungsparameter des Baumes
-			cout << "Startvorschlag Tiefe:10\nNeigung links:15,Wachstum links:0.7\nNeigung rechts: 18,Wachstum rechts:0.8\n";
-			cout << "Tiefe ( >1 ): ";
-			cin >> baum.Tiefe;		// Die Tiefe einlesen.
 
-			cout << "Neigung nach links in Grad: ";	// Die Neigung links einlesen.
-			cin >> baum.Neigung_links;
-
-			cout << "Wachstum nach links ( <1 ): ";// Das Wachstum links einlesen...
-			cin >> baum.Wachstum_links;
-
-			cout << "Neigung nach rechts in Grad: ";
-			cin >> baum.Neigung_rechts;
-
-			cout << "Wachstum nach rechts ( <1 ): ";
-			cin >> baum.Wachstum_rechts;
-			baum.WerteKorrigieren();		// Die Werte fuer das Wachstum ueberpruefen
-											// und wennn notwendig korrigieren.
-			Zeichne_Baum();					// Den Baum zeichnen.
-			cout << "Baum gezeichnet\n";
-
+		startpos = NetworkBuffer.find_first_not_of(seperator, endpos);
+		if (startpos == NetworkBuffer.npos)break;
+		endpos = NetworkBuffer.find_first_of(seperator, startpos);
+		if (endpos == NetworkBuffer.npos)break;
+		token = NetworkBuffer.substr(startpos, endpos - startpos);
+		if ((wordCount == 1) & (token.compare("Nets"))) {
+			cout << "Couldn't find right format.";
+			break;
 		}
-		else {//Vermeidet das Eingeben der Daten. Das ist sinnvoll beim Testen
+		else cout << "Network layout detected." << endl;
 
-			SetConsoleWindowTop();
+		wordCount++;
+		cout << token << endl;
 
-
-			//Testausgaben für Texte
-			text(100, 100, 20, BLACK, "jwC");
-			
-			line(90, 130, 210, 130, 1);
-
-			text(100, 140, 20, BLACK, "R + jwC");
-
-
-			SetGraphicWindowTop();
-
-		}
-
-
-		Restart();						// Den "Restart"-Button malen und auf eine Aktivierung warten.
+		//Restart();						// Den "Restart"-Button malen und auf eine Aktivierung warten.
 		if(StopProcess())break;
 		
 	}
 }
-
-/*void user_main()
-{
-int ww,hh;
-set_windowpos(0,0,600,400);
-while (1) {								// Endlosschleife
-get_windowsize(&ww, &hh);
-set_drawarea(ww, hh);				// Setzen des Zeichenbereiches
-clrscr();
-if (1) {//Eingeben der Generierungsparameter des Baumes
-cout << "Startvorschlag Tiefe:10\nNeigung links:15,Wachstum links:0.7\nNeigung rechts: 18,Wachstum rechts:0.8\n";
-cout << "Tiefe ( >1 ): ";
-cin >> baum.Tiefe;		// Die Tiefe einlesen.
-
-cout << "Neigung nach links in Grad: ";	// Die Neigung links einlesen.
-cin >> baum.Neigung_links;
-
-cout << "Wachstum nach links ( <1 ): ";// Das Wachstum links einlesen...
-cin >> baum.Wachstum_links;
-
-cout << "Neigung nach rechts in Grad: ";
-cin >> baum.Neigung_rechts;
-
-cout << "Wachstum nach rechts ( <1 ): ";
-cin >> baum.Wachstum_rechts;
-baum.WerteKorrigieren();		// Die Werte fuer das Wachstum ueberpruefen
-// und wennn notwendig korrigieren.
-Zeichne_Baum();					// Den Baum zeichnen.
-cout << "Baum gezeichnet\n";
-
-}
-else {//Vermeidet das Eingeben der Daten. Das ist sinnvoll beim Testen
-
-SetConsoleWindowTop();
-baum.Tiefe = 10; baum.Neigung_links = 15; baum.Wachstum_links = 0.7f; baum.Neigung_rechts = 18; baum.Wachstum_rechts = 0.8f;
-baum.WerteKorrigieren();		// Die Werte fuer das Wachstum ueberpruefen
-// und wennn notwendig korrigieren.
-Zeichne_Baum();					// Den Baum zeichnen.
-cout << "Baum gezeichnet\n";
-//Test des Wechsels des Front Fensters
-Sleep(1000);
-SetGraphicWindowTop();
-
-Sleep(1000);
-SetConsoleWindowTop();
-
-Sleep(1000);
-SetGraphicWindowTop();
-
-//Testausgaben für Texte
-text(30, 30, 10, BLUE, "test1");
-text(40, 70, 20, BLUE, RED, "test2");
-text(50, 110, 30, BLUE, "test3");
-text(70, 150, 40, BLUE, RED, 45 * 10, 0, "test4"); //Winkel in Vielfachen von 0.1 Grad
-text(80, 190, 30, BLUE, RED, 120 * 10, 0, "test5");
-text(90, 230, 20, BLUE, "test6 %d Test", 6);
-
-SetGraphicWindowTop();
-
-}
-
-
-Restart();						// Den "Restart"-Button malen und auf eine Aktivierung warten.
-if(StopProcess())break;
-
-}
-}*/
