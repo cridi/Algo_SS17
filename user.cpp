@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <map>
 
 #ifndef _USE_OLD_OSTREAMS
 using namespace std;
@@ -26,37 +27,38 @@ using namespace std;
 COLORREF Colref[]={BLACK,RED,GREEN,BLUE,YELLOW,BROWN};
 int Colind=0;
 
-class _NET {
-public:
-	char INPUT;
-	char OUTPUT;
-	char CMN;
-	char INTERNAL;
-}net;
+//-------------------------------------------------------------------------------------------------------//
+const int IDENTIFIER = 4;
+const int INTEGER1 = 5;
+const int TOKENSTART = 300;
 
-class _RESISTOR {
+class CParser {
 public:
-	char name;
-	int value;
-	char a_pin;
-	char b_pin;
-};
-class _INDUCTOR {
-public:
-	char name;
-	int value;
-	char a_pin;
-	char b_pin;
-};
-class _CONDENSATOR {
-public:
-	char name;
-	int value;
-	char a_pin;
-	char b_pin;
-};
+	map<string, int>TokenTable;
+	map<int, string>ReverseTokenTable;
 
-string NetworkBuffer;
+	void CParser::init_TokenTable();						//loads the tokens
+	void CParser::newTokenEntry(string str, int index);		//load one token
+};
+void CParser::newTokenEntry(string str, int index) {
+	TokenTable[str] = index;
+	ReverseTokenTable[index] = str;
+}
+
+void CParser::init_TokenTable() {
+	newTokenEntry("IDENTIFIER", 4);
+	newTokenEntry("INTEGER1", 5);
+	int ii = TOKENSTART;
+	newTokenEntry("Nets", ii++);
+	newTokenEntry("IN", ii++);
+	newTokenEntry("OUT", ii++);
+	newTokenEntry("CMN", ii++);
+	newTokenEntry("INTERNAL", ii++);
+	//newTokenEntry("R", ii++);
+	//newTokenEntry("C", ii++);
+	//newTokenEntry("L", ii++);
+}
+
 
 struct _BAUM {							// Die fuenf Eingangsparameter des Baumes.
 	int		Tiefe;
@@ -148,46 +150,61 @@ void Restart()
 	clrscr();
 	printf("######################################\n\n");
 }
+ 
+//USER FUNCTIONS
+int TokenSum(string NetworkBuffer) {
+	string SpaceLess = "";
+	string seperator = ";";
+	string token;
 
+	int endpos = 0;
+	int startpos, spacepos = 0;
+	int wordCount = 1;
+
+	cout << "Enter Network in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";
+	getline(cin, NetworkBuffer);
+	cout << "Registered String:\t" << NetworkBuffer << endl;
+
+
+	while (1){
+		for (spacepos; spacepos < NetworkBuffer.size(); spacepos++) {
+			if (isspace(NetworkBuffer[spacepos])) spacepos++;
+			cout << NetworkBuffer[spacepos];
+			SpaceLess = SpaceLess + NetworkBuffer[spacepos];
+		}
+
+		startpos = SpaceLess.find_first_not_of(seperator, endpos);
+		if (startpos == SpaceLess.npos)return -1;
+		endpos = SpaceLess.find_first_of(seperator, startpos);
+		if (endpos == SpaceLess.npos)return -1;
+		token = SpaceLess.substr(startpos, endpos - startpos);
+
+		cout << endl << token;
+	}
+
+}
 
 void user_main()
 {
 	int ww,hh;
 	set_windowpos(0, 0, 600, 400);
 
+	SetConsoleWindowTop();
+	Sleep(1000);
+
 	//USER PROGRAMM
-	cout << "Enter Network!\n";
-	getline(cin, NetworkBuffer);
-	cout << "Registered String\n" << NetworkBuffer << endl;
-	
-	string seperator = ": \t;,";
-	string token;
-	int endpos = 0;
-	int startpos = 0;
-	int wordCount = 1;
+	string NetworkBuffer;
+	string CircuitBuffer;
+
 
 	while (1) {								// Endlosschleife
 		get_windowsize(&ww, &hh);
 		set_drawarea(ww, hh);				// Setzen des Zeichenbereiches     
 		clrscr();
 
-		startpos = NetworkBuffer.find_first_not_of(seperator, endpos);
-		if (startpos == NetworkBuffer.npos)break;
-		endpos = NetworkBuffer.find_first_of(seperator, startpos);
-		if (endpos == NetworkBuffer.npos)break;
-		token = NetworkBuffer.substr(startpos, endpos - startpos);
+		TokenSum(NetworkBuffer);			//Getting rid of spaces and cutting in blocks separated by ;
 
-		if (wordCount == 1) {
-			if (token.compare("Nets")&token.compare("nets")) {
-				cout << "Syntax Error: Unexpected Input Format.";
-				break;
-			}
-		}
-
-		wordCount++;
-		cout << token << endl;
-
-		//Restart();						// Den "Restart"-Button malen und auf eine Aktivierung warten.
+		Restart();							// Den "Restart"-Button malen und auf eine Aktivierung warten.
 		if(StopProcess())break;
 		
 	}
