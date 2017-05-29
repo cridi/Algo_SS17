@@ -1,4 +1,8 @@
 ﻿  user.cpp
-c:\users\knoedel\desktop\git\user.cpp(170): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-  GDE_3.vcxproj -> C:\Users\Knoedel\Desktop\git\Debug\GDE_3.exe
+c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(207): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(200): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(242): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(235): warning C4101: "startpos": Unreferenzierte lokale Variable
+GDE_3.obj : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /SAFESEH ignoriert.
+  GDE_3.vcxproj -> C:\Users\chris\Documents\Visual Studio 2017\Algo_SS17\Debug\GDE_3.exe
   GDE_3.vcxproj -> Debug\GDE_3.pdb (Full PDB)
