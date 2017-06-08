@@ -60,107 +60,16 @@ void CParser::init_TokenTable() {
 	//newTokenEntry("L", ii++);
 }
 
-
-struct _BAUM {							// Die fuenf Eingangsparameter des Baumes.
-	int		Tiefe;
-	int		Neigung_links;
-	float	Wachstum_links;
-	int		Neigung_rechts;
-	float	Wachstum_rechts;
-	void WerteKorrigieren()
-	{
-		if (Wachstum_links > 1) Wachstum_links = 1 / Wachstum_links;
-		if (Wachstum_rechts > 1) Wachstum_rechts = 1 / Wachstum_rechts;
-		Neigung_rechts = -Neigung_rechts;
-	};
-} baum;
-
-
-void Zeichne_Ast(int x, int y, float n, float Tiefe, float Laenge)
-{
-	int x_rel;
-	int y_rel;
-	if(StopProcess())return;
-	if (Tiefe > 1) {										// Stopbedingung fuer die Rekursion.
-		// Zeichnen des linken Astes.
-		x_rel = (int)(Laenge * _sinus(n + baum.Neigung_links));	// Berechnen der x-Koordinate.
-		y_rel = (int)(Laenge * _cosinus(n + baum.Neigung_links));	// Berechnen der y-Koordinate.
-		COLORREF cref=Colref[Colind++]; if(Colind>5)Colind=0;
-		lineto(x-x_rel, y-y_rel, cref);					// Zeichnen
-		// Rekursion!! Zeichnen des nachfolgenden Astes.
-		//Sleep(5);updatescr();
-		Zeichne_Ast(x-x_rel, y-y_rel, n+baum.Neigung_links, Tiefe-1, Laenge*baum.Wachstum_links);
-		moveto(x,y);										// Cursor zur Anfangsposition zuruecksetzen.
-
-		// Zeichnen des rechten Astes.
-		x_rel = (int)(Laenge * _sinus(n + baum.Neigung_rechts));
-		y_rel = (int)(Laenge * _cosinus(n + baum.Neigung_rechts));
-		cref=Colref[Colind++];if(Colind>5)Colind=0;
-		lineto(x-x_rel, y-y_rel, cref);
-		//Sleep(5);updatescr();
-		Zeichne_Ast(x-x_rel, y-y_rel, n+baum.Neigung_rechts, Tiefe-1, Laenge*baum.Wachstum_rechts);
-	}
-
-}
-
-void Zeichne_Baum()
-{
-	int Weite, Hoehe, x, y, StammLaenge;
-
-	// Berechnen des Gesamtwachstums.
-	float GesamtWachstum = 1;
-	float Wachstum = (baum.Wachstum_links > baum.Wachstum_rechts) ? baum.Wachstum_links : baum.Wachstum_rechts;
-	float WT = 1;
-	for (int i=1; i<baum.Tiefe; i++) {
-		WT *= Wachstum;
-		GesamtWachstum += WT;
-	}
-
-	// Berechnung des Fusspunktes des Baumes
-	get_windowsize(&Weite, &Hoehe);
-	x = Weite / 2;
-	y = Hoehe*3/4;
-	text(x, y, 18, RED, "Wurzel [x,y]=[%d,%d]", x,y);
-
-	StammLaenge = (int)(y / GesamtWachstum);			// Laenge des Stammes.
-
-	moveto(x, y);									// Marker auf die Wurzel setzen.
-	lineto(x, y - StammLaenge, BLACK);				// Stamm zeichnen
-	Zeichne_Ast(x, y - StammLaenge, 0, (float)baum.Tiefe, (float)(StammLaenge*(baum.Wachstum_links + baum.Wachstum_rechts)/2));
-}
-
-void Restart()
-{
-	int b, h, x, y;
-
-	get_drawarea(&b, &h);
-
-	textbox(b - 120, h - 40, b - 5, h - 5, 18, BLUE, GREY, GREY, SINGLE_LINE | VCENTER_ALIGN | CENTER_ALIGN, ("Restart"));
-	updatescr();
-
-	while ( 
-		!((mouseclick(&x,&y) == 1) &&
-		  ((x > b-120) && (x < b-5)) &&
-		  ((y > h-40)  &&	(y < h-5))
-		 )) {
-		printf(".");
-		if(StopProcess())break;
-	};
-
-	printf("######################################\n\n");
-	clrscr();
-	printf("######################################\n\n");
-}
-
 //USER PROGRAMM
 string BauteilToken, NetworkToken;
 
 class Network {
+public:
 	string INPUT;
 	string OUTPUT;
 	string CMN;
 	vector<string> INTERNALS;
-public:
+
 	Network();
 	Network(string INPUT, string OUTPUT, string CMN, vector<string> INTERNALS);
 };
@@ -173,11 +82,12 @@ Network::Network(string a, string b, string c, vector<string> d) {
 }
 
 class Bauteil {
+public:
 	string Name;
 	string Art;
 	string Pin1;
 	string Pin2;
-public:
+
 	Bauteil(string Name, string Art, string Pin1, string Pin2);
 };
 Bauteil::Bauteil(string a, string b, string c, string d){
@@ -188,6 +98,69 @@ Bauteil::Bauteil(string a, string b, string c, string d){
 }
 Network Netzwerk;
 vector<Bauteil*> Bauteile;
+
+/*void Is_parallel(Bauteil A , Bauteil B, int Iterator_A, int Iterator_B) {
+
+	if ((A.Pin2 == B.Pin1) && (A.Pin1 == B.Pin2) || (A.Pin1 == B.Pin1) && (B.Pin2 == A.Pin2)){			//Detection is parallel?
+
+		Bauteile.push_back(new Bauteil(A.Name + "||" + B.Name , A.Art , A.Pin1, A.Pin2));				//New Element with outer Pins and new Name
+
+		Bauteile.erase(Bauteile.begin() + Iterator_A);													//Deleting obsolete Elements
+		Bauteile.erase(Bauteile.begin() + Iterator_B);
+		Bauteile.shrink_to_fit();																		//Performance +
+	}
+}
+
+
+void Is_serial(Bauteil A, Bauteil B, int Iterator_A, int Iterator_B) {
+
+	string Pins[] = { A.Pin1, B.Pin2, B.Pin2, A.Pin1 };
+
+	string serial_Pin = 0;
+	string outer_Pin[2];
+	int c = 0;
+
+
+	for (int i = 0; i++; i < 4) {																	//Zuordnung äußere Pins, gemeinsamer Pin;
+		if (Is_serial_Pin(Pins[i])) {
+			serial_Pin = Pins[i];
+		}
+		else  outer_Pin[c] = Pins[i]; c++;
+	}
+
+	if (!serial_Pin.empty()) { 
+
+
+		Bauteile.push_back(new Bauteil(A.Name + " + " + B.Name, A.Art, outer_Pin[0], outer_Pin[1]));				//New Element with outer Pins and new Name
+
+		Bauteile.erase(Bauteile.begin() + Iterator_A);													//Deleting obsolete Elements
+		Bauteile.erase(Bauteile.begin() + Iterator_B);
+		Bauteile.shrink_to_fit();																		//Performance +
+
+	}
+}
+
+bool Is_serial_Pin(string Pin_to_check) {
+	int checksum;
+	if ((Pin_to_check.compare("a")) || (Pin_to_check.compare("b")) || (Pin_to_check.compare("c"))) return false ;		//Check if IN OUT or CMN
+
+	for (int i = 0; i++; i <= Bauteile.size()) {
+		if ((Bauteile.at(i)->Pin1).compare(Pin_to_check)) { checksum++; };												//Check if only two times connected
+		if ((Bauteile.at(i)->Pin2).compare(Pin_to_check)) { checksum++; };												//Then it ist realy serial
+	}
+
+	if (checksum != 2) return false;
+	if (checksum == 2) return true;
+}
+
+void THE_ALGORITHM() {
+	for (int i = 0; i++; i <= 3 * Bauteile.size()) {
+		Is_serial(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
+		Is_parallel(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
+	}
+	
+}*/
+
  
 //USER FUNCTIONS
 string NetworkInput() {
@@ -200,9 +173,11 @@ string NetworkInput() {
 	int startpos, spacepos = 0;
 	int wordCount = 1;
 
-	cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";
-	getline(cin, InputBuffer);
-	cout << "Registered String:\t" << InputBuffer << endl;
+	//cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";		//Disabled for Testing
+	//getline(cin, InputBuffer);
+	//cout << "Registered String:\t" << InputBuffer << endl;
+
+	InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;" ;			// For Testing only
 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
@@ -211,7 +186,7 @@ string NetworkInput() {
 		}
 		SpaceLess = SpaceLess + InputBuffer[spacepos];
 	}
-	cout << SpaceLess << "\n";
+	std::cout << SpaceLess << "\n";
 
 	//while (1){
 	//	startpos = SpaceLess.find_first_not_of(separator, endpos);
@@ -235,10 +210,11 @@ string BauteilInput() {
 	int startpos, spacepos = 0;
 	int wordCount = 1;
 
-	cout << "Enter String in Format: R1:R(a, d); C2:C(d, b); L4:L(b, c)";
-	getline(cin, InputBuffer);
-	cout << "Registered String:\t" << InputBuffer << endl;
+	//cout << "Enter String in Format: R1:R(a, d); C2:C(d, b); L4:L(b, c)";			// Disabled for Testing
+	//getline(cin, InputBuffer);
+	//cout << "Registered String:\t" << InputBuffer << endl;
 
+	InputBuffer = "R1:R(a, d); R2:R(a, d); R3:R(d, e); R4:R(e, b)";			// For Testing only 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
 			spacepos++;
@@ -331,6 +307,12 @@ void TokenBauteil(string Token) {
 	}
 }
 
+void print_network() {
+	for (int i = 0; i < Bauteile.size(); i++) {
+		std::cout << Bauteile.at(i)->Name << ":" << Bauteile.at(i)->Art << "(" << Bauteile.at(i)->Pin1 << ":" << Bauteile.at(i)->Pin2 << ")" << "\t";
+	}
+}
+
 
 void user_main()
 {
@@ -340,20 +322,25 @@ void user_main()
 	SetConsoleWindowTop();
 	Sleep(1000);
 
-	while (1) {								// Endlosschleife
+	//while (1) {								// Endlosschleife
 		get_windowsize(&ww, &hh);
 		set_drawarea(ww, hh);				// Setzen des Zeichenbereiches     
 		clrscr();
 
 		NetworkToken = NetworkInput();			//Getting rid of spaces and cutting in blocks separated by ;
-		//BauteilToken = BauteilInput();
+		BauteilToken = BauteilInput();
 
 	//R1:R(a, b);
 		TokenNetwork(NetworkToken);
-		//TokenBauteil(BauteilToken);
+		TokenBauteil(BauteilToken);
 
-		Restart();							// Den "Restart"-Button malen und auf eine Aktivierung warten.
-		if(StopProcess())break;
+		print_network();
 
-	}
+
+
+
+								// Den "Restart"-Button malen und auf eine Aktivierung warten.
+		//if(StopProcess())break;
+
+	//}
 }
