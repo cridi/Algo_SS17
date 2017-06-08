@@ -99,7 +99,7 @@ Bauteil::Bauteil(string a, string b, string c, string d){
 Network Netzwerk;
 vector<Bauteil*> Bauteile;
 
-/*void Is_parallel(Bauteil A , Bauteil B, int Iterator_A, int Iterator_B) {
+void Is_parallel(Bauteil A , Bauteil B, int Iterator_A, int Iterator_B) {
 
 	if ((A.Pin2 == B.Pin1) && (A.Pin1 == B.Pin2) || (A.Pin1 == B.Pin1) && (B.Pin2 == A.Pin2)){			//Detection is parallel?
 
@@ -112,6 +112,20 @@ vector<Bauteil*> Bauteile;
 }
 
 
+bool Is_serial_Pin(string Pin_to_check) {
+	int checksum;
+	if ((Pin_to_check.compare("a")) || (Pin_to_check.compare("b")) || (Pin_to_check.compare("c"))) return false;		//Check if IN OUT or CMN
+
+	for (unsigned int i = 0; i <= Bauteile.size(); i++) {
+		if ((Bauteile.at(i)->Pin1).compare(Pin_to_check)) { checksum++; };												//Check if only two times connected
+		if ((Bauteile.at(i)->Pin2).compare(Pin_to_check)) { checksum++; };												//Then it ist realy serial
+	}
+
+	if (checksum != 2) return false;
+	if (checksum == 2) return true;
+}
+
+
 void Is_serial(Bauteil A, Bauteil B, int Iterator_A, int Iterator_B) {
 
 	string Pins[] = { A.Pin1, B.Pin2, B.Pin2, A.Pin1 };
@@ -121,7 +135,7 @@ void Is_serial(Bauteil A, Bauteil B, int Iterator_A, int Iterator_B) {
 	int c = 0;
 
 
-	for (int i = 0; i++; i < 4) {																	//Zuordnung äußere Pins, gemeinsamer Pin;
+	for (int i = 0; i < 4; i++ ){															//Zuordnung äußere Pins, gemeinsamer Pin;
 		if (Is_serial_Pin(Pins[i])) {
 			serial_Pin = Pins[i];
 		}
@@ -140,26 +154,13 @@ void Is_serial(Bauteil A, Bauteil B, int Iterator_A, int Iterator_B) {
 	}
 }
 
-bool Is_serial_Pin(string Pin_to_check) {
-	int checksum;
-	if ((Pin_to_check.compare("a")) || (Pin_to_check.compare("b")) || (Pin_to_check.compare("c"))) return false ;		//Check if IN OUT or CMN
-
-	for (int i = 0; i++; i <= Bauteile.size()) {
-		if ((Bauteile.at(i)->Pin1).compare(Pin_to_check)) { checksum++; };												//Check if only two times connected
-		if ((Bauteile.at(i)->Pin2).compare(Pin_to_check)) { checksum++; };												//Then it ist realy serial
-	}
-
-	if (checksum != 2) return false;
-	if (checksum == 2) return true;
-}
-
 void THE_ALGORITHM() {
-	for (int i = 0; i++; i <= 3 * Bauteile.size()) {
+	for (unsigned int i = 0; i <= 3 * Bauteile.size(); i++) {
 		Is_serial(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
 		Is_parallel(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
 	}
 	
-}*/
+}
 
  
 //USER FUNCTIONS
@@ -308,7 +309,7 @@ void TokenBauteil(string Token) {
 }
 
 void print_network() {
-	for (int i = 0; i < Bauteile.size(); i++) {
+	for (unsigned int i = 0; i < Bauteile.size(); i++) {
 		std::cout << Bauteile.at(i)->Name << ":" << Bauteile.at(i)->Art << "(" << Bauteile.at(i)->Pin1 << ":" << Bauteile.at(i)->Pin2 << ")" << "\t";
 	}
 }
@@ -333,6 +334,8 @@ void user_main()
 	//R1:R(a, b);
 		TokenNetwork(NetworkToken);
 		TokenBauteil(BauteilToken);
+
+		THE_ALGORITHM();
 
 		print_network();
 

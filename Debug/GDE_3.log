@@ -1,8 +1,5 @@
 ﻿  user.cpp
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(182): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(173): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(218): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(210): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(311): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-  GDE_3.vcxproj -> C:\Users\chris\Documents\Visual Studio 2017\Algo_SS17\Debug\GDE_3.exe
-  GDE_3.vcxproj -> Debug\GDE_3.pdb (Full PDB)
+c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(5): fatal error C1041: Programmdatenbank "C:\Users\chris\Documents\Visual Studio 2017\Algo_SS17\Debug\vc141.idb" kann nicht geöffnet werden; verwenden Sie /FS, wenn mehrere CL.EXE in dieselbe .PDB-Datei schreiben
+  GDE_3View.cpp
+c:\users\chris\documents\visual studio 2017\algo_ss17\gde_3view.cpp(4): fatal error C1041: Programmdatenbank "C:\Users\chris\Documents\Visual Studio 2017\Algo_SS17\Debug\vc141.pdb" kann nicht geöffnet werden; verwenden Sie /FS, wenn mehrere CL.EXE in dieselbe .PDB-Datei schreiben
+  Code wird generiert...
