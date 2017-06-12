@@ -106,19 +106,24 @@ void Is_parallel(Bauteil A , Bauteil B, int Iterator_A, int Iterator_B) {
 		Bauteile.push_back(new Bauteil(A.Name + "||" + B.Name , A.Art , A.Pin1, A.Pin2));				//New Element with outer Pins and new Name
 
 		Bauteile.erase(Bauteile.begin() + Iterator_A);													//Deleting obsolete Elements
-		Bauteile.erase(Bauteile.begin() + Iterator_B);
+		Bauteile.erase(Bauteile.begin() + Iterator_B - 1);
 		Bauteile.shrink_to_fit();																		//Performance +
 	}
 }
 
 
 bool Is_serial_Pin(string Pin_to_check) {
-	int checksum;
-	if ((Pin_to_check.compare("a")) || (Pin_to_check.compare("b")) || (Pin_to_check.compare("c"))) return false;		//Check if IN OUT or CMN
+	int checksum = 0;
 
-	for (unsigned int i = 0; i <= Bauteile.size(); i++) {
-		if ((Bauteile.at(i)->Pin1).compare(Pin_to_check)) { checksum++; };												//Check if only two times connected
-		if ((Bauteile.at(i)->Pin2).compare(Pin_to_check)) { checksum++; };												//Then it ist realy serial
+	for (int i = 0; i < Netzwerk.INTERNALS.size(); i++) {
+
+		if (!Pin_to_check.compare(Netzwerk.INTERNALS.at(i))) {		//Check if IN OUT or CMN
+			
+			for (unsigned int i = 0; i < Bauteile.size(); i++) {
+				if (!((Bauteile.at(i)->Pin1).compare(Pin_to_check))) { checksum++; };												//Check if only two times connected
+				if (!((Bauteile.at(i)->Pin2).compare(Pin_to_check))) { checksum++; };												//Then it ist realy serial
+			}
+		}
 	}
 
 	if (checksum != 2) return false;
@@ -130,15 +135,17 @@ void Is_serial(Bauteil A, Bauteil B, int Iterator_A, int Iterator_B) {
 
 	string Pins[] = { A.Pin1, B.Pin2, B.Pin2, A.Pin1 };
 
-	string serial_Pin = 0;
-	string outer_Pin[2];
+	string serial_Pin = {};
+	string outer_Pin[4];
 	int c = 0;
-
+	int serialCounter = 0;
 
 	for (int i = 0; i < 4; i++ ){															//Zuordnung äußere Pins, gemeinsamer Pin;
-		if (Is_serial_Pin(Pins[i])) {
+		if (Is_serial_Pin(Pins[i])&&(serialCounter==0)) {
 			serial_Pin = Pins[i];
+			serialCounter = 1;
 		}
+		else if (Is_serial_Pin(Pins[i]) && (serialCounter == 1)){}
 		else  outer_Pin[c] = Pins[i]; c++;
 	}
 
@@ -148,14 +155,14 @@ void Is_serial(Bauteil A, Bauteil B, int Iterator_A, int Iterator_B) {
 		Bauteile.push_back(new Bauteil(A.Name + " + " + B.Name, A.Art, outer_Pin[0], outer_Pin[1]));				//New Element with outer Pins and new Name
 
 		Bauteile.erase(Bauteile.begin() + Iterator_A);													//Deleting obsolete Elements
-		Bauteile.erase(Bauteile.begin() + Iterator_B);
+		Bauteile.erase(Bauteile.begin() + Iterator_B - 1);
 		Bauteile.shrink_to_fit();																		//Performance +
 
 	}
 }
 
 void THE_ALGORITHM() {
-	for (unsigned int i = 0; i <= 3 * Bauteile.size(); i++) {
+	for (unsigned int i = 0; i <=  2; i++) {
 		Is_serial(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
 		Is_parallel(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
 	}
