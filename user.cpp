@@ -118,28 +118,45 @@ vector<Bauteil*> Bauteile;
 vector<Bauteil*> serial_Bauteile;
 
 void Is_parallel() {
-	int leftSweep = floor(Bauteile.size() / 2);
-	int rightSweep = ceil(Bauteile.size() / 2);
+	int outerSweep = Bauteile.size();
+	int innerSweep = Bauteile.size();
 
-	for (int i = 0; i < leftSweep; i++) {
-		for (int ii = Bauteile.size() - 1; ii >= rightSweep; ii--) {
-			if (i >= ii) {
-				break;
+	for (int i = 0; i < outerSweep; i++) {
+		for (int ii = 0; ii < innerSweep; ii++) {
+
+			if (i == ii) {
+				ii++;
+				if (ii == innerSweep)break;
 			}
 
 			if (((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin1) && (Bauteile.at(i)->Pin1 == Bauteile.at(ii)->Pin2)) ||
 				((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin2) && (Bauteile.at(ii)->Pin1 == Bauteile.at(i)->Pin1))) {			//Detection is parallel?
 
-				Bauteile.push_back(new Bauteil(Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name, 
-											   Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));				//New Element with outer Pins and new Name
+				if (Bauteile.at(i)->Art == Bauteile.at(ii)->Art) {
+					if (Bauteile.at(i)->Art == "C") {
+						Bauteile.push_back(new Bauteil( "(" + Bauteile.at(i)->Name + "+" + Bauteile.at(ii)->Name + ")",
+														Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));
 
-				Bauteile.erase(Bauteile.begin() + i);													//Deleting obsolete Elements
-				Bauteile.erase(Bauteile.begin() + ii - 1);
+					}
+					else {
+						Bauteile.push_back(new Bauteil(	Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name,
+														Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));				//New Element with outer Pins and new Name
+					}
 
-		//		leftSweep = floor(Bauteile.size() / 2);
-			//	rightSweep = ceil(Bauteile.size() / 2);
-			//	ii = Bauteile.size() - 1;
-				return;
+					if (i < ii) {
+						Bauteile.erase(Bauteile.begin() + i);													//Deleting obsolete Elements
+						Bauteile.erase(Bauteile.begin() + ii - 1);
+					}
+					else {
+						Bauteile.erase(Bauteile.begin() + ii);													//Deleting obsolete Elements
+						Bauteile.erase(Bauteile.begin() + i - 1);
+					}
+
+					//		leftSweep = floor(Bauteile.size() / 2);
+						//	rightSweep = ceil(Bauteile.size() / 2);
+						//	ii = Bauteile.size() - 1;
+					return;
+				}
 			}
 		}
 	}
@@ -194,16 +211,27 @@ void find_outer_Pins(string serial_Pin) {
 
 void create_new_serial_Bauteil() {
 	
-	Bauteile.push_back(new Bauteil("(" + serial_Bauteile.at(0)->Name + " + " + serial_Bauteile.at(1)->Name + ")",
-		serial_Bauteile.at(1)->Art, serial_Bauteile.at(0)->Pin1, serial_Bauteile.at(1)->Pin1));				//New Element with outer Pins and new Name
-	for (int i=0; i < Bauteile.size(); i++) {
-		if (!(serial_Bauteile.at(0)->Name.compare(Bauteile.at(i)->Name)) || (!(serial_Bauteile.at(1)->Name.compare(Bauteile.at(i)->Name)))) {
-			Bauteile.erase(Bauteile.begin() + i);
-			i = -1;
+	if (serial_Bauteile.at(0)->Art == serial_Bauteile.at(1)->Art) {
+
+		if (serial_Bauteile.at(0)->Art == "C") {
+			Bauteile.push_back(new Bauteil(	serial_Bauteile.at(0)->Name + "||" + serial_Bauteile.at(1)->Name,
+											serial_Bauteile.at(1)->Art, serial_Bauteile.at(0)->Pin1, serial_Bauteile.at(1)->Pin1));
 		}
+		else {
+			Bauteile.push_back(new Bauteil(	"(" + serial_Bauteile.at(0)->Name + " + " + serial_Bauteile.at(1)->Name + ")",
+											serial_Bauteile.at(1)->Art, serial_Bauteile.at(0)->Pin1, serial_Bauteile.at(1)->Pin1));				//New Element with outer Pins and new Name
+		}
+
+		for (int i = 0; i < Bauteile.size(); i++) {
+			if (!(serial_Bauteile.at(0)->Name.compare(Bauteile.at(i)->Name)) || (!(serial_Bauteile.at(1)->Name.compare(Bauteile.at(i)->Name)))) {
+				Bauteile.erase(Bauteile.begin() + i);
+				i = -1;
+			}
+		}
+		
+		serial_Bauteile.erase(serial_Bauteile.begin() + 1);
+		serial_Bauteile.erase(serial_Bauteile.begin() + 0);
 	}
-	serial_Bauteile.erase(serial_Bauteile.begin() + 1);
-	serial_Bauteile.erase(serial_Bauteile.begin() + 0);
 }
 
 
@@ -211,10 +239,28 @@ void Is_serial() {
 
 	vector<string*> serial_Pins;
 	int c = 0;
+	int PinFlag = 0;
 
 	for (int i = 0; i < Bauteile.size(); i++) {															//Zuordnung äußere Pins, gemeinsamer Pin;
+		PinFlag = 0;
 		if (Is_serial_Pin(Bauteile.at(i)->Pin1)){
-			serial_Pins.push_back(new string(Bauteile.at(i)->Pin1));
+
+			for (int ii = 0; ii < serial_Pins.size(); ii++) {
+				if (!(serial_Pins.at(ii)->compare(Bauteile.at(i)->Pin1))) PinFlag = 1;
+			}
+
+			if (PinFlag == 0) {
+				serial_Pins.push_back(new string(Bauteile.at(i)->Pin1));
+			}
+		}
+		else if (Is_serial_Pin(Bauteile.at(i)->Pin2)) {
+
+			for (int ii = 0; ii < serial_Pins.size(); ii++) {
+				if (!(serial_Pins.at(ii)->compare(Bauteile.at(i)->Pin2))) PinFlag = 1;
+			}
+			if (PinFlag == 0){
+				serial_Pins.push_back(new string(Bauteile.at(i)->Pin2));
+			}
 		}
 	}
 	for (int i = 0; i < serial_Pins.size(); i++) {
@@ -237,6 +283,7 @@ void THE_ALGORITHM() {
 			Is_serial();
 			serialLimit = Bauteile.size();
 		}
+
 		for (unsigned int i = 0; i < parallelLimit; i++) {
 			Is_parallel();
 			parallelLimit = Bauteile.size();
@@ -260,7 +307,7 @@ string NetworkInput() {
 	//getline(cin, InputBuffer);
 	//cout << "Registered String:\t" << InputBuffer << endl;
 
-	InputBuffer = "a:IN; b:Out; c: CMN; d,e,f: Internal;" ;			// For Testing only
+	InputBuffer = "a:IN; b:Out; c: CMN; d,e,f,g: Internal;" ;			// For Testing only
 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
@@ -297,7 +344,7 @@ string BauteilInput() {
 	//getline(cin, InputBuffer);
 	//cout << "Registered String:\t" << InputBuffer << endl;
 
-	InputBuffer = "R1:R(a, d); R2:R(d, f); R3:R(d, f); R4:R(d, f); R5:R(d, e); R6:R(e, f); R7:R(f, b);";			// For Testing only 
+	InputBuffer = "R1:R(a, d); L2:L(d, f); L3:L(d, f); R4:R(d, f); R5:R(d, e); R6:R(e, f); R7:R(f, b);C1:C(d,f); C2:C(d,g); C3:C(f,g);";			// For Testing only 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
 			spacepos++;
