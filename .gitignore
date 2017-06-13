@@ -17,3 +17,13 @@
 obj/
 [Rr]elease*/
 _ReSharper*/
+.vs/GDE_3/v15/.suo
+.vs/GDE_3/v15/Browse.VC.opendb
+Debug/GDE_3.exe
+Debug/GDE_3.ilk
+Debug/GDE_3.log
+Debug/GDE_3.pdb
+Debug/GDE_3.tlog/CL.write.1.tlog
+Debug/GDE_3.tlog/unsuccessfulbuild
+Debug/vc141.idb
+Debug/vc141.pdb
