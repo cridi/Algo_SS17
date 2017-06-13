@@ -89,26 +89,61 @@ public:
 	string Pin2;
 
 	Bauteil(string Name, string Art, string Pin1, string Pin2);
+	string getName();
+	string getArt();
+	string getPin1();
+	string getPin2();
 };
+
 Bauteil::Bauteil(string a, string b, string c, string d){
 	Name = a;
 	Art = b;
 	Pin1 = c;
 	Pin2 = d;
 }
+string Bauteil::getName() {
+	return Name;
+}
+string Bauteil::getArt() {
+	return Art;
+}
+string Bauteil::getPin1() {
+	return Pin1;
+}
+string Bauteil::getPin2() {
+	return Pin1;
+}
 Network Netzwerk;
 vector<Bauteil*> Bauteile;
+vector<Bauteil*> serial_Bauteile;
 
-void Is_parallel(Bauteil A , Bauteil B, int Iterator_A, int Iterator_B) {
+void Is_parallel() {
+	int leftSweep = floor(Bauteile.size() / 2);
+	int rightSweep = ceil(Bauteile.size() / 2);
 
-	if ((A.Pin2 == B.Pin1) && (A.Pin1 == B.Pin2) || (A.Pin1 == B.Pin1) && (B.Pin2 == A.Pin2)){			//Detection is parallel?
+	for (int i = 0; i < leftSweep; i++) {
+		for (int ii = Bauteile.size() - 1; ii >= rightSweep; ii--) {
+			if (i >= ii) {
+				break;
+			}
 
-		Bauteile.push_back(new Bauteil(A.Name + "||" + B.Name , A.Art , A.Pin1, A.Pin2));				//New Element with outer Pins and new Name
+			if (((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin1) && (Bauteile.at(i)->Pin1 == Bauteile.at(ii)->Pin2)) ||
+				((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin2) && (Bauteile.at(ii)->Pin1 == Bauteile.at(i)->Pin1))) {			//Detection is parallel?
 
-		Bauteile.erase(Bauteile.begin() + Iterator_A);													//Deleting obsolete Elements
-		Bauteile.erase(Bauteile.begin() + Iterator_B - 1);
-		Bauteile.shrink_to_fit();																		//Performance +
+				Bauteile.push_back(new Bauteil(Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name, 
+											   Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));				//New Element with outer Pins and new Name
+
+				Bauteile.erase(Bauteile.begin() + i);													//Deleting obsolete Elements
+				Bauteile.erase(Bauteile.begin() + ii - 1);
+
+		//		leftSweep = floor(Bauteile.size() / 2);
+			//	rightSweep = ceil(Bauteile.size() / 2);
+			//	ii = Bauteile.size() - 1;
+				return;
+			}
+		}
 	}
+
 }
 
 
@@ -130,43 +165,83 @@ bool Is_serial_Pin(string Pin_to_check) {
 	if (checksum == 2) return true;
 }
 
-
-void Is_serial(Bauteil A, Bauteil B, int Iterator_A, int Iterator_B) {
-
-	string Pins[] = { A.Pin1, B.Pin2, B.Pin2, A.Pin1 };
-
-	string serial_Pin = {};
-	string outer_Pin[4];
-	int c = 0;
-	int serialCounter = 0;
-
-	for (int i = 0; i < 4; i++ ){															//Zuordnung äußere Pins, gemeinsamer Pin;
-		if (Is_serial_Pin(Pins[i])&&(serialCounter==0)) {
-			serial_Pin = Pins[i];
-			serialCounter = 1;
+void find_serial_Bauteil(string serial_Pin) {
+	for (unsigned int i = 0; i < Bauteile.size(); i++) {
+		if ((!((Bauteile.at(i)->Pin1).compare(serial_Pin))) || (!((Bauteile.at(i)->Pin2).compare(serial_Pin)))) {
+			serial_Bauteile.push_back(Bauteile.at(i));
+			break;
 		}
-		else if (Is_serial_Pin(Pins[i]) && (serialCounter == 1)){}
-		else  outer_Pin[c] = Pins[i]; c++;
-	}
-
-	if (!serial_Pin.empty()) { 
-
-
-		Bauteile.push_back(new Bauteil(A.Name + " + " + B.Name, A.Art, outer_Pin[0], outer_Pin[1]));				//New Element with outer Pins and new Name
-
-		Bauteile.erase(Bauteile.begin() + Iterator_A);													//Deleting obsolete Elements
-		Bauteile.erase(Bauteile.begin() + Iterator_B - 1);
-		Bauteile.shrink_to_fit();																		//Performance +
-
 	}
 }
 
-void THE_ALGORITHM() {
-	for (unsigned int i = 0; i <=  2; i++) {
-		Is_serial(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
-		Is_parallel(*Bauteile.at(i), *Bauteile.at(i + 1), i, i + 1);
+void reverse_find_serial_Bauteil(string serial_Pin) {
+	for (unsigned int i = Bauteile.size()-1; i >= 0; i--) {
+		if ((!((Bauteile.at(i)->Pin1).compare(serial_Pin))) || (!((Bauteile.at(i)->Pin2).compare(serial_Pin)))) {
+			serial_Bauteile.push_back(Bauteile.at(i));
+			break;
+		}
 	}
+}
+
+void find_outer_Pins(string serial_Pin) {
+	if ((serial_Pin.compare(serial_Bauteile.at(0)->Pin2))) {
+		(serial_Bauteile.at(0)->Pin1) = (serial_Bauteile.at(0)->Pin2);
+	}
+	if ((serial_Pin.compare(serial_Bauteile.at(1)->Pin2))) {
+		(serial_Bauteile.at(1)->Pin1) = (serial_Bauteile.at(1)->Pin2);
+	}
+}
+
+void create_new_serial_Bauteil() {
 	
+	Bauteile.push_back(new Bauteil("(" + serial_Bauteile.at(0)->Name + " + " + serial_Bauteile.at(1)->Name + ")",
+		serial_Bauteile.at(1)->Art, serial_Bauteile.at(0)->Pin1, serial_Bauteile.at(1)->Pin1));				//New Element with outer Pins and new Name
+	for (int i=0; i < Bauteile.size(); i++) {
+		if (!(serial_Bauteile.at(0)->Name.compare(Bauteile.at(i)->Name)) || (!(serial_Bauteile.at(1)->Name.compare(Bauteile.at(i)->Name)))) {
+			Bauteile.erase(Bauteile.begin() + i);
+			i = -1;
+		}
+	}
+	serial_Bauteile.erase(serial_Bauteile.begin() + 1);
+	serial_Bauteile.erase(serial_Bauteile.begin() + 0);
+}
+
+
+void Is_serial() {
+
+	vector<string*> serial_Pins;
+	int c = 0;
+
+	for (int i = 0; i < Bauteile.size(); i++) {															//Zuordnung äußere Pins, gemeinsamer Pin;
+		if (Is_serial_Pin(Bauteile.at(i)->Pin1)){
+			serial_Pins.push_back(new string(Bauteile.at(i)->Pin1));
+		}
+	}
+	for (int i = 0; i < serial_Pins.size(); i++) {
+		find_serial_Bauteil(*serial_Pins.at(i));
+		reverse_find_serial_Bauteil(*serial_Pins.at(i));
+		find_outer_Pins(*serial_Pins.at(i));
+		create_new_serial_Bauteil();
+	}
+
+}
+
+
+void THE_ALGORITHM() {
+	int serialLimit = Bauteile.size();
+	int parallelLimit = Bauteile.size();
+
+	for (int i = 0; i < 5; i++) {
+
+		for (unsigned int i = 0; i < serialLimit; i++) {
+			Is_serial();
+			serialLimit = Bauteile.size();
+		}
+		for (unsigned int i = 0; i < parallelLimit; i++) {
+			Is_parallel();
+			parallelLimit = Bauteile.size();
+		}
+	}
 }
 
  
@@ -185,7 +260,7 @@ string NetworkInput() {
 	//getline(cin, InputBuffer);
 	//cout << "Registered String:\t" << InputBuffer << endl;
 
-	InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;" ;			// For Testing only
+	InputBuffer = "a:IN; b:Out; c: CMN; d,e,f: Internal;" ;			// For Testing only
 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
@@ -222,7 +297,7 @@ string BauteilInput() {
 	//getline(cin, InputBuffer);
 	//cout << "Registered String:\t" << InputBuffer << endl;
 
-	InputBuffer = "R1:R(a, d); R2:R(a, d); R3:R(d, e); R4:R(e, b)";			// For Testing only 
+	InputBuffer = "R1:R(a, d); R2:R(d, f); R3:R(d, f); R4:R(d, f); R5:R(d, e); R6:R(e, f); R7:R(f, b);";			// For Testing only 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
 			spacepos++;
