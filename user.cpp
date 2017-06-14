@@ -200,9 +200,10 @@ string NetworkInput() {
 	int startpos, spacepos = 0;
 	int wordCount = 1;
 
-	cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";
-	getline(cin, InputBuffer);
-	cout << "Registered String:\t" << InputBuffer << endl;
+	//cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";
+	//getline(cin, InputBuffer);
+	//cout << "Registered String:\t" << InputBuffer << endl;
+	InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";
 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
@@ -235,9 +236,10 @@ string BauteilInput() {
 	int startpos, spacepos = 0;
 	int wordCount = 1;
 
-	cout << "Enter String in Format: R1:R(a, d); C2:C(d, b); L4:L(b, c)";
-	getline(cin, InputBuffer);
-	cout << "Registered String:\t" << InputBuffer << endl;
+	//cout << "Enter String in Format: R1:R(a, d); C2:C(d, b); L4:L(b, c)";
+	//getline(cin, InputBuffer);
+	//cout << "Registered String:\t" << InputBuffer << endl;
+	InputBuffer = "R1:R(a, d); C2:C(d, b); L4:L(b, c);";
 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
