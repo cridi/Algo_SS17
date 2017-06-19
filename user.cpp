@@ -117,6 +117,8 @@ Network Netzwerk;
 vector<Bauteil*> Bauteile;
 vector<Bauteil*> serial_Bauteile;
 
+void SternFind(vector<vector<string>> AdjazenzMatrix, string Pins);
+
 void Is_parallel() {
 	int outerSweep = Bauteile.size();
 	int innerSweep = Bauteile.size();
@@ -132,16 +134,9 @@ void Is_parallel() {
 			if (((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin1) && (Bauteile.at(i)->Pin1 == Bauteile.at(ii)->Pin2)) ||
 				((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin2) && (Bauteile.at(ii)->Pin1 == Bauteile.at(i)->Pin1))) {			//Detection is parallel?
 
-				if (Bauteile.at(i)->Art == Bauteile.at(ii)->Art) {
-					if (Bauteile.at(i)->Art == "C") {
-						Bauteile.push_back(new Bauteil("(" + Bauteile.at(i)->Name + "+" + Bauteile.at(ii)->Name + ")",
-							Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));
-
-					}
-					else {
 						Bauteile.push_back(new Bauteil(Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name,
 							Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));				//New Element with outer Pins and new Name
-					}
+
 
 					if (i < ii) {
 						Bauteile.erase(Bauteile.begin() + i);													//Deleting obsolete Elements
@@ -156,13 +151,11 @@ void Is_parallel() {
 					//	rightSweep = ceil(Bauteile.size() / 2);
 					//	ii = Bauteile.size() - 1;
 					return;
-				}
 			}
 		}
 	}
 
 }
-
 
 bool Is_serial_Pin(string Pin_to_check) {
 	int checksum = 0;
@@ -211,16 +204,8 @@ void find_outer_Pins(string serial_Pin) {
 
 void create_new_serial_Bauteil() {
 
-	if (serial_Bauteile.at(0)->Art == serial_Bauteile.at(1)->Art) {
-
-		if (serial_Bauteile.at(0)->Art == "C") {
-			Bauteile.push_back(new Bauteil(serial_Bauteile.at(0)->Name + "||" + serial_Bauteile.at(1)->Name,
-				serial_Bauteile.at(1)->Art, serial_Bauteile.at(0)->Pin1, serial_Bauteile.at(1)->Pin1));
-		}
-		else {
 			Bauteile.push_back(new Bauteil("(" + serial_Bauteile.at(0)->Name + " + " + serial_Bauteile.at(1)->Name + ")",
 				serial_Bauteile.at(1)->Art, serial_Bauteile.at(0)->Pin1, serial_Bauteile.at(1)->Pin1));				//New Element with outer Pins and new Name
-		}
 
 		for (int i = 0; i < Bauteile.size(); i++) {
 			if (!(serial_Bauteile.at(0)->Name.compare(Bauteile.at(i)->Name)) || (!(serial_Bauteile.at(1)->Name.compare(Bauteile.at(i)->Name)))) {
@@ -231,7 +216,7 @@ void create_new_serial_Bauteil() {
 
 		serial_Bauteile.erase(serial_Bauteile.begin() + 1);
 		serial_Bauteile.erase(serial_Bauteile.begin() + 0);
-	}
+
 }
 
 
@@ -272,6 +257,51 @@ void Is_serial() {
 
 }
 
+void Adjazenz() {
+
+	string Pins = "";
+	for (int i = 0; i < Bauteile.size(); i++) {
+
+		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {
+			Pins = Pins + Bauteile.at(i)->Pin1;
+		}
+		if (Pins.find(Bauteile.at(i)->Pin2) == Pins.npos) {
+			Pins = Pins + Bauteile.at(i)->Pin2;
+		}
+	}
+	int rows = Pins.size();
+	int cols = Pins.size();
+
+	vector<vector<string>> AdjazenzMatrix;
+	AdjazenzMatrix.resize(rows);
+	for (int i = 0; i < rows; i++) {
+		AdjazenzMatrix[i].resize(cols);;
+	}
+
+	for (int i = 0; i < Bauteile.size(); i++) {
+
+		AdjazenzMatrix[Pins.find(Bauteile.at(i)->Pin1)][Pins.find(Bauteile.at(i)->Pin2)] = Bauteile.at(i)->Name;
+	}
+	SternFind(AdjazenzMatrix, Pins);
+}
+void SternFind(vector<vector<string>> AdjazenzMatrix, string Pins){
+	int SternCounter = 0;
+	int rows = Pins.size();
+	int cols = Pins.size();
+
+	for (int outer = 0; outer < rows; outer++) {
+		for (int i = 0; i < rows; i++) {
+			if (AdjazenzMatrix[i][outer] != "")SternCounter++;
+			if (AdjazenzMatrix[outer][i] != "")SternCounter++;
+		}
+
+		if (SternCounter == 3) {
+			break;
+		}
+		SternCounter = 0;
+	}
+}
+
 
 void THE_ALGORITHM() {
 	int serialLimit = Bauteile.size();
@@ -289,6 +319,9 @@ void THE_ALGORITHM() {
 			parallelLimit = Bauteile.size();
 		}
 	}
+
+	Adjazenz();
+
 }
 
 
@@ -344,7 +377,7 @@ string BauteilInput() {
 	//getline(cin, InputBuffer);
 	//cout << "Registered String:\t" << InputBuffer << endl;
 
-	InputBuffer = "R1:R(a, d); L2:L(d, f); L3:L(d, f); R4:R(d, f); R5:R(d, e); R6:R(e, f); R7:R(f, b);C1:C(d,f); C2:C(d,g); C3:C(f,g);";			// For Testing only 
+	InputBuffer = "R1:R(a, d); R2:R(e, f); R3:R(g, b); L1:L(f, c); C1:C(d,e); C2:C(e, g); C3:C(g, b); ";			// For Testing only 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
 			spacepos++;
@@ -474,5 +507,5 @@ void user_main()
 	// Den "Restart"-Button malen und auf eine Aktivierung warten.
 	//if(StopProcess())break;
 
-	//}
+		//}
 }
