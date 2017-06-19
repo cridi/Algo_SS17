@@ -1,7 +1,17 @@
 ﻿  user.cpp
-c:\users\knoedel\desktop\git\user.cpp(207): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(200): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\knoedel\desktop\git\user.cpp(242): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(235): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(170): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(225): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(244): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(248): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(258): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(266): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(282): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(287): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(312): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(303): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(348): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(340): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(183): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
+GDE_3.obj : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /SAFESEH ignoriert.
   GDE_3.vcxproj -> C:\Users\Knoedel\Desktop\git\Debug\GDE_3.exe
   GDE_3.vcxproj -> Debug\GDE_3.pdb (Full PDB)
