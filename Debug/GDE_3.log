@@ -1,18 +1,24 @@
 ﻿  user.cpp
-c:\users\knoedel\desktop\git\user.cpp(163): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(210): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(229): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(233): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(243): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(251): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(263): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(281): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(312): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(317): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(345): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(336): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\knoedel\desktop\git\user.cpp(381): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(373): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\knoedel\desktop\git\user.cpp(176): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
+c:\users\knoedel\desktop\git\user.cpp(161): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(209): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(228): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(232): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(242): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(250): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(292): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(310): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(327): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(328): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(374): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(391): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(392): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(446): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(451): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(483): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(474): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(519): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(511): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(174): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
+c:\users\knoedel\desktop\git\user.cpp(286): warning C4715: "SternFind": Nicht alle Codepfade geben einen Wert zurück.
   GDE_3.vcxproj -> C:\Users\Knoedel\Desktop\git\Debug\GDE_3.exe
   GDE_3.vcxproj -> Debug\GDE_3.pdb (Full PDB)
