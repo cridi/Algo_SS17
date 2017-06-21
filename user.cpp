@@ -33,33 +33,6 @@ const int IDENTIFIER = 4;
 const int INTEGER1 = 5;
 const int TOKENSTART = 300;
 
-class CParser {
-public:
-	map<string, int>TokenTable;
-	map<int, string>ReverseTokenTable;
-
-	void CParser::init_TokenTable();						//loads the tokens
-	void CParser::newTokenEntry(string str, int index);		//load one token
-};
-void CParser::newTokenEntry(string str, int index) {
-	TokenTable[str] = index;
-	ReverseTokenTable[index] = str;
-}
-
-void CParser::init_TokenTable() {
-	newTokenEntry("IDENTIFIER", 4);
-	newTokenEntry("INTEGER1", 5);
-	int ii = TOKENSTART;
-	newTokenEntry("Nets", ii++);
-	newTokenEntry("IN", ii++);
-	newTokenEntry("OUT", ii++);
-	newTokenEntry("CMN", ii++);
-	newTokenEntry("INTERNAL", ii++);
-	//newTokenEntry("R", ii++);
-	//newTokenEntry("C", ii++);
-	//newTokenEntry("L", ii++);
-}
-
 //USER PROGRAMM
 string BauteilToken, NetworkToken;
 
@@ -89,10 +62,7 @@ public:
 	string Pin2;
 
 	Bauteil(string Name, string Art, string Pin1, string Pin2);
-	string getName();
-	string getArt();
-	string getPin1();
-	string getPin2();
+	Bauteil();
 };
 
 Bauteil::Bauteil(string a, string b, string c, string d) {
@@ -101,21 +71,12 @@ Bauteil::Bauteil(string a, string b, string c, string d) {
 	Pin1 = c;
 	Pin2 = d;
 }
-string Bauteil::getName() {
-	return Name;
-}
-string Bauteil::getArt() {
-	return Art;
-}
-string Bauteil::getPin1() {
-	return Pin1;
-}
-string Bauteil::getPin2() {
-	return Pin1;
-}
+Bauteil::Bauteil() {};
+
 Network Netzwerk;
 vector<Bauteil*> Bauteile;
 vector<Bauteil*> serial_Bauteile;
+vector<char*> GraphicOutput;
 
 void Is_parallel() {
 	int outerSweep = Bauteile.size();
@@ -135,6 +96,12 @@ void Is_parallel() {
 						Bauteile.push_back(new Bauteil(Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name,
 							Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));				//New Element with outer Pins and new Name
 						cout << "Zusammenfassung: " << Bauteile.at(i)->Name << "||" << Bauteile.at(ii)->Name << endl;
+						
+						string BufferStr = Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name;
+						char* Buffer = new char [BufferStr.size() + 1];
+						strcpy(Buffer, BufferStr.c_str());
+
+						GraphicOutput.push_back(Buffer);
 
 					if (i < ii) {
 						Bauteile.erase(Bauteile.begin() + i);													//Deleting obsolete Elements
@@ -331,6 +298,9 @@ void SternAdjazenz() {
 		}
 	}
 
+	GraphicOutput.push_back("");
+	GraphicOutput.push_back("***Dreieck zu Stern Wandlung:***");
+	GraphicOutput.push_back("********************************");
 
 	Bauteile.push_back(new Bauteil("ZD" + Pins.substr(0, 1) + Pins.substr(1, 1), "Z",
 		Pins.substr(0, 1), Pins.substr(1, 1)));
@@ -338,17 +308,43 @@ void SternAdjazenz() {
 		" = " << ValueBauteile[0] << " + " << ValueBauteile[1] << " + " <<
 		"(" << ValueBauteile[0] << "*" << ValueBauteile[1] << ")" << "/" << ValueBauteile[2] << endl;
 
+	string BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(1, 1) +
+		" = " + ValueBauteile[0] + " + " + ValueBauteile[1] + " + " +
+		"(" + ValueBauteile[0] + "*" + ValueBauteile[1] + ")" + "/" + ValueBauteile[2];
+	char* Buffer = new char[BufferStr.size() + 1];
+	strcpy(Buffer, BufferStr.c_str());
+
+	GraphicOutput.push_back(Buffer);
+
 	Bauteile.push_back(new Bauteil("ZD" + Pins.substr(0, 1) + Pins.substr(2, 1), "Z",
 		Pins.substr(0, 1), Pins.substr(2, 1)));
 	cout << "Zusammenfassung: " << "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) <<
 		" = " << ValueBauteile[0] << " + " << ValueBauteile[2] << " + " <<
 		"(" << ValueBauteile[0] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[1] << endl;
 
+	BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) +
+		" = " + ValueBauteile[0] + " + " + ValueBauteile[2] + " + " +
+		"(" + ValueBauteile[0] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[1];
+	Buffer = new char[BufferStr.size() + 1];
+	strcpy(Buffer, BufferStr.c_str());
+
+	GraphicOutput.push_back(Buffer);
+
 	Bauteile.push_back(new Bauteil("ZD" + Pins.substr(1, 1) + Pins.substr(2, 1), "Z",
 		Pins.substr(1, 1), Pins.substr(2, 1)));
 	cout << "Zusammenfassung: " << "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) <<
 		" = " << ValueBauteile[1] << " + " << ValueBauteile[2] << " + " <<
 		"(" << ValueBauteile[1] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[0] << endl;
+
+	BufferStr = "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) +
+		" = " + ValueBauteile[1] + " + " + ValueBauteile[2] + " + " +
+		"(" + ValueBauteile[1] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[0];
+	Buffer = new char[BufferStr.size() + 1];
+	strcpy(Buffer, BufferStr.c_str());
+
+	GraphicOutput.push_back(Buffer);
+	GraphicOutput.push_back("********************************");
+	GraphicOutput.push_back("");
 
 	int Size = Bauteile.size();
 	for (int i = 0; i < Size; i++) {
@@ -394,6 +390,9 @@ bool DreieckAdjazenz() {
 			else if (DreieckBauteile.at(i)->Pin2 == Pins.substr(ii, 1))ValueBauteile[ii].push_back(DreieckBauteile.at(i)->Name);
 		}
 	}
+			GraphicOutput.push_back("");
+			GraphicOutput.push_back("***Stern zu Dreieck Wandlung:***");
+			GraphicOutput.push_back("********************************");
 
 			Bauteile.push_back(new Bauteil("Z*" + Pins.substr(0, 1), "Z",
 											Pins.substr(0, 1), "*"));
@@ -402,6 +401,15 @@ bool DreieckAdjazenz() {
 											"(" << DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << 
 											" + " << DreieckBauteile.at(2)->Name << ")" << endl;
 
+			string BufferStr = "Z*" + Pins.substr(0, 1) +
+				" = " + "(" + ValueBauteile[0][0] + "*" + ValueBauteile[0][1] + ")" + "/" +
+				"(" + DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +
+				" + " + DreieckBauteile.at(2)->Name + ")";
+			char* Buffer = new char[BufferStr.size() + 1];
+			strcpy(Buffer, BufferStr.c_str());
+
+			GraphicOutput.push_back(Buffer);
+
 			Bauteile.push_back(new Bauteil("Z*" + Pins.substr(1, 1), "Z",
 											Pins.substr(1, 1), "*"));
 			cout << "Zusammenfassung: " << "Z*" + Pins.substr(1, 1) <<
@@ -409,12 +417,33 @@ bool DreieckAdjazenz() {
 											"(" << DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << 
 											" + " << DreieckBauteile.at(2)->Name << ")" << endl;
 
+			BufferStr = "Z*" + Pins.substr(1, 1) +
+				" = " + "(" + ValueBauteile[1][0] + "*" + ValueBauteile[1][1] + ")" + "/" +
+				"(" + DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +
+				" + " + DreieckBauteile.at(2)->Name + ")";
+			Buffer = new char[BufferStr.size() + 1];
+			strcpy(Buffer, BufferStr.c_str());
+
+			GraphicOutput.push_back(Buffer);
+
 			Bauteile.push_back(new Bauteil("Z*" + Pins.substr(2, 1), "Z",
 											Pins.substr(2, 1), "*"));
 			cout << "Zusammenfassung: " << "Z*" + Pins.substr(2, 1) <<
 											" = " << "(" << ValueBauteile[2][0] << "*" << ValueBauteile[2][1] << ")" << "/" <<
 											"(" << DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << 
 											" + " << DreieckBauteile.at(2)->Name << ")" << endl;
+
+			BufferStr = "Z*" + Pins.substr(2, 1) +
+				" = " + "(" + ValueBauteile[2][0] + "*" + ValueBauteile[2][1] + ")" + "/" +
+				"(" + DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +
+				" + " + DreieckBauteile.at(2)->Name + ")";
+			Buffer = new char[BufferStr.size() + 1];
+			strcpy(Buffer, BufferStr.c_str());
+
+			GraphicOutput.push_back(Buffer);
+			GraphicOutput.push_back("********************************");
+			GraphicOutput.push_back("");
+			
 
 	int Size = Bauteile.size();
 	for (int i = 0; i < Size; i++) {
@@ -435,11 +464,53 @@ bool DreieckAdjazenz() {
 	return true;
 }
 
+void Uebertragungsfkt() {
+	Bauteil Ground;
+	Bauteil Input;
+	Bauteil Output;
 
+	for (int i = 0; i < Bauteile.size(); i++) {
+		if ((Bauteile.at(i)->Pin1 == Netzwerk.INPUT) || (Bauteile.at(i)->Pin2 == Netzwerk.INPUT))Input = *Bauteile.at(i);
+		else if ((Bauteile.at(i)->Pin1 == Netzwerk.OUTPUT) || (Bauteile.at(i)->Pin2 == Netzwerk.OUTPUT))Output = *Bauteile.at(i);
+		else if ((Bauteile.at(i)->Pin1 == Netzwerk.CMN) || (Bauteile.at(i)->Pin2 == Netzwerk.CMN))Ground = *Bauteile.at(i);
+	}
+
+}
+
+char * InputImpedanz() {
+	string Input;
+
+	for (int i = 0; i < Bauteile.size(); i++) {
+		if ((Bauteile.at(i)->Pin1 == Netzwerk.INPUT) || (Bauteile.at(i)->Pin2 == Netzwerk.INPUT))Input = Bauteile.at(i)->Name;
+	}
+
+	char* Buffer = new char[Input.size() + 1];
+	strcpy(Buffer, Input.c_str());
+
+	return Buffer;
+}
+
+char * CMNImpedanz() {
+	string CMN;
+
+	for (int i = 0; i < Bauteile.size(); i++) {
+		if ((Bauteile.at(i)->Pin1 == Netzwerk.CMN) || (Bauteile.at(i)->Pin2 == Netzwerk.CMN))CMN = Bauteile.at(i)->Name;
+	}
+
+	char* Buffer = new char[CMN.size() + 1];
+	strcpy(Buffer, CMN.c_str());
+
+	return Buffer;
+
+}
 
 void THE_ALGORITHM() {
 	int serialLimit = Bauteile.size();
 	int parallelLimit = Bauteile.size();
+	GraphicOutput.push_back("********************************");
+	GraphicOutput.push_back("*LOG DER ZUSAMMENFASSUNGEN:*");
+	GraphicOutput.push_back("********************************");
+	GraphicOutput.push_back("");
 
 	for (int i = 0; i < 5; i++) {
 
@@ -460,6 +531,7 @@ void THE_ALGORITHM() {
 
 		SternAdjazenz();
 	}
+
 }
 
 
@@ -614,36 +686,87 @@ void print_network() {
 	}
 }
 
+void Restart()
+{
+	int b, h, x, y;
+
+	get_drawarea(&b, &h);
+
+	textbox(b - 120, h - 40, b - 5, h - 5, 18, BLUE, GREY, GREY, SINGLE_LINE | VCENTER_ALIGN | CENTER_ALIGN, ("Restart"));
+	updatescr();
+
+	while (
+		!((mouseclick(&x, &y) == 1) &&
+		((x > b - 120) && (x < b - 5)) &&
+			((y > h - 40) && (y < h - 5))
+			)) {
+		printf(".");
+		if (StopProcess())break;
+	};
+
+	printf("######################################\n\n");
+	clrscr();
+	printf("######################################\n\n");
+}
 
 void user_main()
 {
 	int ww, hh;
-	set_windowpos(0, 0, 600, 400);
+	set_windowpos(0, 0, 1200, 800);
 
-	SetConsoleWindowTop();
-	Sleep(1000);
+	while (1) {								// Endlosschleife
 
-	//while (1) {								// Endlosschleife
-	get_windowsize(&ww, &hh);
-	set_drawarea(ww, hh);				// Setzen des Zeichenbereiches     
-	clrscr();
+		get_windowsize(&ww, &hh);
+		set_drawarea(ww, hh);				// Setzen des Zeichenbereiches     
+		clrscr();
 
-	NetworkToken = NetworkInput();			//Getting rid of spaces and cutting in blocks separated by ;
-	BauteilToken = BauteilInput();
+		if (1) {
 
-	//R1:R(a, b);
-	TokenNetwork(NetworkToken);
-	TokenBauteil(BauteilToken);
+			SetConsoleWindowTop();
+			Sleep(1000);
 
-	THE_ALGORITHM();
+			NetworkToken = NetworkInput();			//Getting rid of spaces and cutting in blocks separated by ;
+			BauteilToken = BauteilInput();
 
-	print_network();
+			TokenNetwork(NetworkToken);
+			TokenBauteil(BauteilToken);
+
+			THE_ALGORITHM();
+
+			Uebertragungsfkt();
+
+			print_network();
+		}
+
+		SetGraphicWindowTop();
+
+		int height = 10;
+		int width = hh / 2;
+
+		string Nenner = CMNImpedanz();
+		Nenner.append(" + ");
+		Nenner.append(InputImpedanz());
+		char* NennerP = new char[Nenner.size() + 1];
+		strcpy(NennerP, Nenner.c_str());
 
 
+		text(0, 35, 30, BLACK, "G=");
+		text(35, 25, 25, BLACK, CMNImpedanz());
+		line(30, 50, 120, 50, BLACK);
+		text(35, 50, 25, BLACK, NennerP);
 
+		for (int i = 0; i < GraphicOutput.size(); i++) {
+			text(width, height, 15, BLACK, GraphicOutput.at(i));
 
-	// Den "Restart"-Button malen und auf eine Aktivierung warten.
-	//if(StopProcess())break;
+			height += 15;
+			if (height > hh) {
+				height = 10;
+				width += 50;
+			}
+		}
 
-		//}
+		Restart();					//Den "Restart"-Button malen und auf eine Aktivierung warten.
+		if(StopProcess())break;
+
+	}
 }
