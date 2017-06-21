@@ -37,6 +37,14 @@ const int TOKENSTART = 300;
 string BauteilToken, NetworkToken;
 
 class Network {
+	/*********************************************************
+	Die Klasse Beschreibt das Netzwerk im Allgemeinen wie es von
+	Außen zu betrachten ist. Es werden Knotenarten definiert um 
+	später unterscheiden zu können ob diese wegrationalisiert 
+	werden dürfen. 
+	Für die Berechnung der Übertragungsfunktion werden diese 
+	Informationen ebenfalls verwendet.
+	***********************************************************/
 public:
 	string INPUT;
 	string OUTPUT;
@@ -55,6 +63,13 @@ Network::Network(string a, string b, string c, vector<string> d) {
 }
 
 class Bauteil {
+	/*********************************************************
+	Diese Klasse beschreibt Bauteile wie sie in RLC Netzwerken 
+	vorkommen
+	Bauteile haben die Eigenschaften Name, Art, Pin1 und Pin2. 
+	Da nur absrakte Übertragungsfunktionen erzeugt werden, sind
+	keine Numerischen Werte vorgesehen
+	***********************************************************/
 public:
 	string Name;
 	string Art;
@@ -79,7 +94,13 @@ vector<Bauteil*> serial_Bauteile;
 vector<char*> GraphicOutput;
 
 void Is_parallel() {
-	int outerSweep = Bauteile.size();
+	/*********************************************************
+	Diese Funktion überprüft ob zwei Bauteile parallel sind. 
+	Ist dies der Fall so werden diese zusammengefasst und an das
+	Ende des Bauteilvektors geschrieben.
+	Die Zusammengefassten Bauteile werden anschließend gelöscht.
+	***********************************************************/
+	int outerSweep = Bauteile.size();		
 	int innerSweep = Bauteile.size();
 
 	for (int i = 0; i < outerSweep; i++) {
@@ -90,31 +111,39 @@ void Is_parallel() {
 				if (ii == innerSweep)break;
 			}
 
-			if (((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin1) && (Bauteile.at(i)->Pin1 == Bauteile.at(ii)->Pin2)) ||
-				((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin2) && (Bauteile.at(ii)->Pin1 == Bauteile.at(i)->Pin1))) {			//Detection is parallel?
+			if (((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin1)					//Überprüfung ob zwei Bauteile parallel sind
+				&& (Bauteile.at(i)->Pin1 == Bauteile.at(ii)->Pin2))					//TRUE Wenn beide Pins gleich sind
+				||
+				((Bauteile.at(i)->Pin2 == Bauteile.at(ii)->Pin2) 
+				&& (Bauteile.at(ii)->Pin1 == Bauteile.at(i)->Pin1))) {			
 
-						Bauteile.push_back(new Bauteil(Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name,
-							Bauteile.at(i)->Art, Bauteile.at(i)->Pin1, Bauteile.at(i)->Pin2));				//New Element with outer Pins and new Name
-						cout << "Zusammenfassung: " << Bauteile.at(i)->Name << "||" << Bauteile.at(ii)->Name << endl;
+						Bauteile.push_back(new Bauteil(Bauteile.at(i)->Name 
+							+ "||" +												//Neues Bauteil mit den Namen der Bauteile die
+							Bauteile.at(ii)->Name,									//getrennt von einem ||
+							Bauteile.at(i)->Art, 
+							Bauteile.at(i)->Pin1,									//Da beide Bauteile an den gleichen Pins hängen
+							Bauteile.at(i)->Pin2));			
+
+						cout << "Zusammenfassung: " << Bauteile.at(i)->Name			//Konsolenausgabe
+							<< "||" << Bauteile.at(ii)->Name << endl;
 						
-						string BufferStr = Bauteile.at(i)->Name + "||" + Bauteile.at(ii)->Name;
-						char* Buffer = new char [BufferStr.size() + 1];
-						strcpy(Buffer, BufferStr.c_str());
+						string BufferStr = Bauteile.at(i)->Name + "||" +			//für die Ausgabe im GDE muss std::string konvertiert
+										   Bauteile.at(ii)->Name;					//werden
 
-						GraphicOutput.push_back(Buffer);
+						char* Buffer = new char [BufferStr.size() + 1];				//Dafür wird Speicherplatz freigegeben 
+						strcpy(Buffer, BufferStr.c_str());							//Und der konvertierte String hinkopiert
+																					//Anschließend kann die Adresse an die graf Ausg.
+						GraphicOutput.push_back(Buffer);							//übergeben werden.
 
 					if (i < ii) {
-						Bauteile.erase(Bauteile.begin() + i);													//Deleting obsolete Elements
-						Bauteile.erase(Bauteile.begin() + ii - 1);
-					}
+						Bauteile.erase(Bauteile.begin() + i);						//Wenn zuerst das Element an dem kleineren iterator
+						Bauteile.erase(Bauteile.begin() + ii - 1);					//Wert gelöscht wird, muss beim zweiten löschen die
+					}																//kleinere Vektorgröße bedacht werden.
 					else {
-						Bauteile.erase(Bauteile.begin() + ii);													//Deleting obsolete Elements
+						Bauteile.erase(Bauteile.begin() + ii);						
 						Bauteile.erase(Bauteile.begin() + i - 1);
 					}
 
-					//		leftSweep = floor(Bauteile.size() / 2);
-					//	rightSweep = ceil(Bauteile.size() / 2);
-					//	ii = Bauteile.size() - 1;
 					return;
 			}
 		}
@@ -123,24 +152,37 @@ void Is_parallel() {
 }
 
 bool Is_serial_Pin(string Pin_to_check) {
+	/*********************************************************
+	Diese Funktion überprüft ob ein Pin ein serieller Pin ist.
+	Ist dies der Fall gibt Sie ein TRUE zurück.
+	Einen seriellen Pin klassifiziert, dass nur 2, Bauteile an 
+	diesem angeschlossen sind.
+	Diese Information wird später benötigt um Serielle Bauteile
+	zusammen zu fassen. 
+	***********************************************************/
 	int checksum = 0;
 
 	for (int i = 0; i < Netzwerk.INTERNALS.size(); i++) {
 
-		if (!Pin_to_check.compare(Netzwerk.INTERNALS.at(i))) {		//Check if IN OUT or CMN
-
-			for (unsigned int i = 0; i < Bauteile.size(); i++) {
-				if (!((Bauteile.at(i)->Pin1).compare(Pin_to_check))) { checksum++; };												//Check if only two times connected
-				if (!((Bauteile.at(i)->Pin2).compare(Pin_to_check))) { checksum++; };												//Then it ist realy serial
+		if (!Pin_to_check.compare(Netzwerk.INTERNALS.at(i))) {							//Überprüfung ob der Pin ein Internal ist
+																						//Der auch weggekürzt werden darf
+			for (unsigned int i = 0; i < Bauteile.size(); i++) {						//Bauteil für Bauteil wird überprüft ob...
+				if (!((Bauteile.at(i)->Pin1).compare(Pin_to_check))) { checksum++; };	//exakt zwei Bauteile an einem Pin hängen
+				if (!((Bauteile.at(i)->Pin2).compare(Pin_to_check))) { checksum++; };	
 			}
 		}
 	}
 
-	if (checksum != 2) return false;
-	if (checksum == 2) return true;
+	if (checksum != 2) return false;													//Wenn dies der Fall ist so gibt die Funktion ein
+	if (checksum == 2) return true;														// TRUE zurück
 }
 
 void find_serial_Bauteil(string serial_Pin) {
+	/*********************************************************
+	Diese Funtkion überprüft welche Bauteile an dem zuvor 
+	gefundenen seriellen Pin angeschlossen sind und speichert
+	diese zwischen in einem neuen Vektor
+	***********************************************************/
 	for (unsigned int i = 0; i < Bauteile.size(); i++) {
 		if ((!((Bauteile.at(i)->Pin1).compare(serial_Pin))) || (!((Bauteile.at(i)->Pin2).compare(serial_Pin)))) {
 			serial_Bauteile.push_back(Bauteile.at(i));
@@ -150,6 +192,12 @@ void find_serial_Bauteil(string serial_Pin) {
 }
 
 void reverse_find_serial_Bauteil(string serial_Pin) {
+	/*********************************************************
+	Diese Funktion funktioniert wie find_serial_Bauteil() mit 
+	dem Unterschied, dass Sie die Bauteile von hinten überprüft.
+	So wird sicher gestellt, dass beide an dem seriellen Pin 
+	befindlichen Bauteile gefunden werden. 
+	***********************************************************/
 	for (unsigned int i = Bauteile.size() - 1; i >= 0; i--) {
 		if ((!((Bauteile.at(i)->Pin1).compare(serial_Pin))) || (!((Bauteile.at(i)->Pin2).compare(serial_Pin)))) {
 			serial_Bauteile.push_back(Bauteile.at(i));
@@ -159,52 +207,71 @@ void reverse_find_serial_Bauteil(string serial_Pin) {
 }
 
 void find_outer_Pins(string serial_Pin) {
+
+	/********************************************************
+	Diese Funktion überprüft die Bauteile die als 
+	Reihenschaltung zusammengefasst werden sollen und stellt 
+	fest was die äußeren Pins dieser Reihenschaltung sind. 
+	********************************************************/
+	
 	if ((serial_Pin.compare(serial_Bauteile.at(0)->Pin2))) {
-		(serial_Bauteile.at(0)->Pin1) = (serial_Bauteile.at(0)->Pin2);
-	}
-	if ((serial_Pin.compare(serial_Bauteile.at(1)->Pin2))) {
-		(serial_Bauteile.at(1)->Pin1) = (serial_Bauteile.at(1)->Pin2);
+		(serial_Bauteile.at(0)->Pin1) = (serial_Bauteile.at(0)->Pin2);		//Wenn ein Pin eines Bauteils nicht mit dem
+	}																		//seriellen Pin übereinstimmt, so wird er als
+	if ((serial_Pin.compare(serial_Bauteile.at(1)->Pin2))) {				//Pin 1 definiert. So wird sicher gestellt, dass 
+		(serial_Bauteile.at(1)->Pin1) = (serial_Bauteile.at(1)->Pin2);		//in Pin 1 immer die äußeren Pins stehen
 	}
 }
 
 void create_new_serial_Bauteil() {
 
-			Bauteile.push_back(new Bauteil("(" + serial_Bauteile.at(0)->Name + " + " + serial_Bauteile.at(1)->Name + ")",
-											serial_Bauteile.at(1)->Art, serial_Bauteile.at(0)->Pin1, serial_Bauteile.at(1)->Pin1));				//New Element with outer Pins and new Name
-			cout << "Zusammenfassung: " << serial_Bauteile.at(0)->Name << "+" << serial_Bauteile.at(1)->Name << endl;
+	/********************************************************
+	Diese Funktion fasst zwei Bauteile zu einem seriellen 
+	Bauteil zusammen und löscht die alten Bauteile.
+	********************************************************/
 
-		for (int i = 0; i < Bauteile.size(); i++) {
-			if (!(serial_Bauteile.at(0)->Name.compare(Bauteile.at(i)->Name)) || (!(serial_Bauteile.at(1)->Name.compare(Bauteile.at(i)->Name)))) {
-				Bauteile.erase(Bauteile.begin() + i);
-				i = -1;
-			}
+	Bauteile.push_back(new Bauteil("(" + serial_Bauteile.at(0)->Name + " + " +  //Ein neues serielles Bauteil wird erstellt.
+									serial_Bauteile.at(1)->Name + ")",			//Der Name besteht aus den beiden Namen der Bauteile
+									serial_Bauteile.at(1)->Art,					//und wird durch ein Plus getrennt.
+									serial_Bauteile.at(0)->Pin1,				//das Bauteil bekommt die äußeren Pins der einzelnen
+									serial_Bauteile.at(1)->Pin1));				//Bauteile
+	
+	cout << "Zusammenfassung: " << serial_Bauteile.at(0)->Name << "+" 
+		<< serial_Bauteile.at(1)->Name << endl;									//Ausgabe der Konsole
+
+	for (int i = 0; i < Bauteile.size(); i++) {
+		if (!(serial_Bauteile.at(0)->Name.compare(Bauteile.at(i)->Name)) ||		//Die Bauteile die zusammengefasst wurden 
+			(!(serial_Bauteile.at(1)->Name.compare(Bauteile.at(i)->Name))))		//werden gesucht und gelöscht.
+		{
+			Bauteile.erase(Bauteile.begin() + i);								//Da der Vektor nun ein Bauteil kürzer ist
+			i = -1;																//Muss der Iterator gelöscht werden.
 		}
+	}
 
-		serial_Bauteile.erase(serial_Bauteile.begin() + 1);
-		serial_Bauteile.erase(serial_Bauteile.begin() + 0);
+	serial_Bauteile.erase(serial_Bauteile.begin() + 1);							//Der Buffer für die Seriellen Bauteile wird gelöscht
+	serial_Bauteile.erase(serial_Bauteile.begin() + 0);
 
 }
 
-
 void Is_serial() {
-
+	/********************************************************
+	Diese Funktion sucht nach seriellen Bauteilen im Netzwerk.
+	********************************************************/
 	vector<string*> serial_Pins;
 int c = 0;
 int PinFlag = 0;
 
-for (int i = 0; i < Bauteile.size(); i++) {															//Zuordnung äußere Pins, gemeinsamer Pin;
+for (int i = 0; i < Bauteile.size(); i++) {											
 	PinFlag = 0;
-	if (Is_serial_Pin(Bauteile.at(i)->Pin1)) {
-
-		for (int ii = 0; ii < serial_Pins.size(); ii++) {
-			if (!(serial_Pins.at(ii)->compare(Bauteile.at(i)->Pin1))) PinFlag = 1;
-		}
-
+	if (Is_serial_Pin(Bauteile.at(i)->Pin1)) {										//Alle seriellen Pin des Netzwerks werden detektiert
+		for (int ii = 0; ii < serial_Pins.size(); ii++) {							//Und in einem Vektor gespeichert.
+			if (!(serial_Pins.at(ii)->compare(Bauteile.at(i)->Pin1))) PinFlag = 1;	//Wenn der Pin bereits als serieller Pin gefunden wurde
+		}																			//wird ein EscapeFlag gesetzt, dass dieser nicht
+																					//Öfter in den Vektor geschrieben wird.
 		if (PinFlag == 0) {
 			serial_Pins.push_back(new string(Bauteile.at(i)->Pin1));
 		}
 	}
-	else if (Is_serial_Pin(Bauteile.at(i)->Pin2)) {
+	else if (Is_serial_Pin(Bauteile.at(i)->Pin2)) {									//Die selbe Überprüfung findet für Pin 2 statt.
 
 		for (int ii = 0; ii < serial_Pins.size(); ii++) {
 			if (!(serial_Pins.at(ii)->compare(Bauteile.at(i)->Pin2))) PinFlag = 1;
@@ -214,23 +281,31 @@ for (int i = 0; i < Bauteile.size(); i++) {															//Zuordnung äußere P
 		}
 	}
 }
-for (int i = 0; i < serial_Pins.size(); i++) {
-	find_serial_Bauteil(*serial_Pins.at(i));
-	reverse_find_serial_Bauteil(*serial_Pins.at(i));
-	find_outer_Pins(*serial_Pins.at(i));
-	create_new_serial_Bauteil();
+for (int i = 0; i < serial_Pins.size(); i++) {										//Hat man nun alle seriellen Pins im Netzwerk gefunden
+	find_serial_Bauteil(*serial_Pins.at(i));										//Werden die anliegenden bauteile in einen Buffer 
+	reverse_find_serial_Bauteil(*serial_Pins.at(i));								//geschrieben
+	find_outer_Pins(*serial_Pins.at(i));											//Die äußeren Pins dieser beiden Bauteile bestimmt
+	create_new_serial_Bauteil();													//und schließlich ein neues Bauteil erstellt.
 }
 
 }
 
 vector<Bauteil*> SternFind(vector<vector<Bauteil*>> AdjazenzMatrix, string Pins) {
+	/********************************************************
+	Mit dieser Funktion wird überprüft ob im Netzwerk 
+	Sternpunkte vorhanden sind. Anschließend wird eine Stern
+	Dreieck Wandlung nötig sein.
+
+	Die Funktion gibt die drei am Sternpunkt hängenden 
+	Bauteile in einem Vektor wieder zurück.
+	********************************************************/
 	vector<Bauteil*> SternBauteile;
 
 	int SternCounter = 0;
 	int rows = Pins.size();
 	int cols = Pins.size();
 
-	for (int outer = 0; outer < rows; outer++) {
+	for (int outer = 0; outer < rows; outer++) {									//DENNIS HIER!
 		for (int i = 0; i < rows; i++) {
 			if (AdjazenzMatrix[i][outer] != NULL) {
 				SternCounter++;
@@ -253,12 +328,17 @@ vector<Bauteil*> SternFind(vector<vector<Bauteil*>> AdjazenzMatrix, string Pins)
 }
 
 void SternAdjazenz() {
+	/********************************************************
+	Erkennt und fasst Sternform in Schaltungen zusammen
+	********************************************************/
 	vector<Bauteil*> SternBauteile;
-
+	string SternPin;
 	string Pins = "";
+
+
 	for (int i = 0; i < Bauteile.size(); i++) {
 
-		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {
+		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {									//DENNIS HIER
 			Pins = Pins + Bauteile.at(i)->Pin1;
 		}
 		if (Pins.find(Bauteile.at(i)->Pin2) == Pins.npos) {
@@ -267,78 +347,115 @@ void SternAdjazenz() {
 	}
 	int rows = Pins.size();
 	int cols = Pins.size();
+	vector<vector<Bauteil*>> AdjazenzMatrix;												//Eine matrix mit Bauteile.size*Bauteile.size
+	AdjazenzMatrix.resize(rows);															//Diese ist vom Typ Bauteil
 
-	vector<vector<Bauteil*>> AdjazenzMatrix;
-	AdjazenzMatrix.resize(rows);
 	for (int i = 0; i < rows; i++) {
 		AdjazenzMatrix[i].resize(cols);
 	}
-
-	for (int i = 0; i < Bauteile.size(); i++) {
-
-		AdjazenzMatrix[Pins.find(Bauteile.at(i)->Pin1)][Pins.find(Bauteile.at(i)->Pin2)] = Bauteile.at(i);
+	for (int i = 0; i < Bauteile.size(); i++) {												//DENNIS HIER
+		AdjazenzMatrix[Pins.find(Bauteile.at(i)->Pin1)]
+					  [Pins.find(Bauteile.at(i)->Pin2)] = Bauteile.at(i);
 	}
 
-	SternBauteile = SternFind(AdjazenzMatrix, Pins);
+	SternBauteile = SternFind(AdjazenzMatrix, Pins);										//Sternbauteile werden gesucht und wenn 
+																							//vorhanden zurückgegeben
 
-	string SternPin;
 
-	if (SternBauteile.at(0)->Pin1 == SternBauteile.at(1)->Pin1)SternPin = SternBauteile.at(0)->Pin1;
-	else if (SternBauteile.at(0)->Pin1 == SternBauteile.at(1)->Pin2)SternPin = SternBauteile.at(0)->Pin1;
+	if (SternBauteile.at(0)->Pin1 == SternBauteile.at(1)->Pin1){							//Es wird der Sternpin bestimmt
+		SternPin = SternBauteile.at(0)->Pin1;												//Der nach der Wandlung zum 3eck
+	}																						//gelöscht wird
+	else if (SternBauteile.at(0)->Pin1 == SternBauteile.at(1)->Pin2) {
+		SternPin = SternBauteile.at(0)->Pin1;
+	}
 	else SternPin = SternBauteile.at(0)->Pin2;
+	Pins.erase(Pins.find(SternPin), 1);							
 
-	Pins.erase(Pins.find(SternPin), 1);
 
 	string* ValueBauteile = new string[Pins.size()];
 
-	for (int i = 0; i < SternBauteile.size(); i++) {
-		for (int ii = 0; ii < Pins.size(); ii++) {
-			if (SternBauteile.at(i)->Pin1 == Pins.substr(ii, 1)) ValueBauteile[ii] = SternBauteile.at(i)->Name;
-			else if (SternBauteile.at(i)->Pin2 == Pins.substr(ii, 1))ValueBauteile[ii] = SternBauteile.at(i)->Name;
+	for (int i = 0; i < SternBauteile.size(); i++) {									//Die Namen der Sternbauteile werden 
+		for (int ii = 0; ii < Pins.size(); ii++) {										//zwischengespeichert um Sie später als 
+			if (SternBauteile.at(i)->Pin1 == Pins.substr(ii, 1)) {						//Formel ausgeben zu können
+				ValueBauteile[ii] = SternBauteile.at(i)->Name;
+			}
+			else if (SternBauteile.at(i)->Pin2 == Pins.substr(ii, 1)) { 
+				ValueBauteile[ii] = SternBauteile.at(i)->Name;
+			}
 		}
 	}
 
+	
+	
 	GraphicOutput.push_back("");
-	GraphicOutput.push_back("***Dreieck zu Stern Wandlung:***");
+	GraphicOutput.push_back("***Stern zu Dreieck Wandlung:***");
 	GraphicOutput.push_back("********************************");
 
-	Bauteile.push_back(new Bauteil("ZD" + Pins.substr(0, 1) + Pins.substr(1, 1), "Z",
-		Pins.substr(0, 1), Pins.substr(1, 1)));
-	cout << "Zusammenfassung: " << "ZD" + Pins.substr(0, 1) + Pins.substr(1, 1) <<
-		" = " << ValueBauteile[0] << " + " << ValueBauteile[1] << " + " <<
-		"(" << ValueBauteile[0] << "*" << ValueBauteile[1] << ")" << "/" << ValueBauteile[2] << endl;
 
-	string BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(1, 1) +
-		" = " + ValueBauteile[0] + " + " + ValueBauteile[1] + " + " +
-		"(" + ValueBauteile[0] + "*" + ValueBauteile[1] + ")" + "/" + ValueBauteile[2];
+	Bauteile.push_back(new Bauteil("ZD" + 
+		Pins.substr(0, 1) + 
+		Pins.substr(1, 1), "Z",
+		Pins.substr(0, 1), 
+		Pins.substr(1, 1)));
+
+	cout << "Zusammenfassung: " << "ZD" + Pins.substr(0, 1) + Pins.substr(1, 1) << " = "		//Ausgabe nach Formel der 
+		<< ValueBauteile[0] << " + " << ValueBauteile[1] << " + " << "(" <<						//Stern Dreieck Wandlung 
+		ValueBauteile[0] << "*"	<< ValueBauteile[1] << ")" << "/" << ValueBauteile[2] << endl;
+
+	string BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(1, 1) +" = " +					//Dafür wird Speicherplatz freigegeben 
+		ValueBauteile[0] + " + " + ValueBauteile[1] + " + " + "(" + ValueBauteile[0] + "*" +	//Und der konvertierte String hinkopiert
+		ValueBauteile[1] + ")" + "/" + ValueBauteile[2];										//Anschließend kann die Adresse an die graf Ausg.
+		ValueBauteile[1] + ")" + "/" + ValueBauteile[2];										//übergeben werden.
+
+
 	char* Buffer = new char[BufferStr.size() + 1];
 	strcpy(Buffer, BufferStr.c_str());
 
 	GraphicOutput.push_back(Buffer);
 
-	Bauteile.push_back(new Bauteil("ZD" + Pins.substr(0, 1) + Pins.substr(2, 1), "Z",
-		Pins.substr(0, 1), Pins.substr(2, 1)));
-	cout << "Zusammenfassung: " << "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) <<
-		" = " << ValueBauteile[0] << " + " << ValueBauteile[2] << " + " <<
-		"(" << ValueBauteile[0] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[1] << endl;
+	/********************************************************
+	Zweites bauteil des Dreieck wird Ausgegeben und in den 
+	Bauteile Vector geschrieben
+	********************************************************/
 
-	BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) +
-		" = " + ValueBauteile[0] + " + " + ValueBauteile[2] + " + " +
-		"(" + ValueBauteile[0] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[1];
+	Bauteile.push_back(new Bauteil("ZD" + 
+		Pins.substr(0, 1) + 
+		Pins.substr(2, 1), "Z",
+		Pins.substr(0, 1), 
+		Pins.substr(2, 1)));
+
+	cout << "Zusammenfassung: " << "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) << " = " << 
+		ValueBauteile[0] << " + " << ValueBauteile[2] << " + " << "(" << 
+		ValueBauteile[0] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[1] << endl;
+
+	BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) + " = " + 
+		ValueBauteile[0] + " + " + ValueBauteile[2] + " + " +"(" + 
+		ValueBauteile[0] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[1];
+
 	Buffer = new char[BufferStr.size() + 1];
 	strcpy(Buffer, BufferStr.c_str());
 
 	GraphicOutput.push_back(Buffer);
 
-	Bauteile.push_back(new Bauteil("ZD" + Pins.substr(1, 1) + Pins.substr(2, 1), "Z",
-		Pins.substr(1, 1), Pins.substr(2, 1)));
-	cout << "Zusammenfassung: " << "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) <<
-		" = " << ValueBauteile[1] << " + " << ValueBauteile[2] << " + " <<
-		"(" << ValueBauteile[1] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[0] << endl;
+	/********************************************************
+	Drittes bauteil des Dreieck wird Ausgegeben und in den
+	Bauteile Vector geschrieben
+	********************************************************/
 
-	BufferStr = "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) +
-		" = " + ValueBauteile[1] + " + " + ValueBauteile[2] + " + " +
-		"(" + ValueBauteile[1] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[0];
+	Bauteile.push_back(new Bauteil("ZD" + 
+		Pins.substr(1, 1) + 
+		Pins.substr(2, 1), "Z",
+		Pins.substr(1, 1), 
+		Pins.substr(2, 1)));
+
+	cout << "Zusammenfassung: " << "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) <<" = " << 
+		ValueBauteile[1] << " + " << ValueBauteile[2] << " + " <<"(" << 
+		ValueBauteile[1] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[0] << endl;
+
+	BufferStr = "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) + " = " + 
+		ValueBauteile[1] + " + " + ValueBauteile[2] + " + " + "(" + 
+		ValueBauteile[1] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[0];
+
 	Buffer = new char[BufferStr.size() + 1];
 	strcpy(Buffer, BufferStr.c_str());
 
@@ -346,12 +463,18 @@ void SternAdjazenz() {
 	GraphicOutput.push_back("********************************");
 	GraphicOutput.push_back("");
 
-	int Size = Bauteile.size();
+
+	/********************************************************
+	/Bauteile die vereinfacht wurden werden gelöscht
+	********************************************************/
+
+
+	int Size = Bauteile.size();														
 	for (int i = 0; i < Size; i++) {
 		if (Bauteile.at(i)->Name == SternBauteile.at(0)->Name) {
 			Bauteile.erase(Bauteile.begin() + i);
-			i = -1;
-		}
+			i = -1;																		//Iterator dekremtent um das gelöschte Element 
+		}																				//zu beachten
 		else if (Bauteile.at(i)->Name == SternBauteile.at(1)->Name) {
 			Bauteile.erase(Bauteile.begin() + i);
 			i = -1;
@@ -360,16 +483,20 @@ void SternAdjazenz() {
 			Bauteile.erase(Bauteile.begin() + i);
 			i = -1;
 		}
-		Size = Bauteile.size();
-	}
+		Size = Bauteile.size();															//Endpunkt immer Anpassen um nicht über den
+	}																					//Vektor hinaus zu iterieren
 }
+
 bool DreieckAdjazenz() {
+	/********************************************************
+	Erkennt und fasst Dreiecksform in Schaltungen zusammen
+	********************************************************/
 	vector<Bauteil*> DreieckBauteile;
-
 	string Pins = "";
-	for (int i = 0; i < Bauteile.size(); i++) {
 
-		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {
+	for (int i = 0; i < Bauteile.size(); i++) {											//Alle im Netzwerk vorhandenen Pins werden
+																						//Zwischengespeichert
+		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {								
 			Pins = Pins + Bauteile.at(i)->Pin1;
 		}
 		if (Pins.find(Bauteile.at(i)->Pin2) == Pins.npos) {
@@ -377,66 +504,96 @@ bool DreieckAdjazenz() {
 		}
 	}
 
-	if (Pins.size() != 3)return false;
-
-	DreieckBauteile = Bauteile;
+	if (Pins.size() != 3)return false;													//Interessanterweise treten Dreiecke nur bei
+																						//einer Netzwerkgröße von 3 auf. Sonst kann immer
+	DreieckBauteile = Bauteile;															//immer auch ein Stern gefunden werden.
 
 	vector<vector<string>> ValueBauteile;
 	ValueBauteile.resize(Pins.size());
 
-	for (int i = 0; i < DreieckBauteile.size(); i++) {
+	for (int i = 0; i < DreieckBauteile.size(); i++) {									//DENNIS HIER
 		for (int ii = 0; ii < Pins.size(); ii++) {
-			if (DreieckBauteile.at(i)->Pin1 == Pins.substr(ii, 1)) ValueBauteile[ii].push_back(DreieckBauteile.at(i)->Name);
-			else if (DreieckBauteile.at(i)->Pin2 == Pins.substr(ii, 1))ValueBauteile[ii].push_back(DreieckBauteile.at(i)->Name);
+			if (DreieckBauteile.at(i)->Pin1 == Pins.substr(ii, 1)) { 
+				ValueBauteile[ii].push_back(DreieckBauteile.at(i)->Name); 
+			}
+			else if (DreieckBauteile.at(i)->Pin2 == Pins.substr(ii, 1)) {
+				ValueBauteile[ii].push_back(DreieckBauteile.at(i)->Name);
+			}
 		}
 	}
+			/********************************************************
+			Ausgabe und Bildung der neuen SternBauteile
+			********************************************************/
+
 			GraphicOutput.push_back("");
-			GraphicOutput.push_back("***Stern zu Dreieck Wandlung:***");
+			GraphicOutput.push_back("***Dreieck zu Stern Wandlung:***");
 			GraphicOutput.push_back("********************************");
 
-			Bauteile.push_back(new Bauteil("Z*" + Pins.substr(0, 1), "Z",
-											Pins.substr(0, 1), "*"));
-			cout << "Zusammenfassung: " << "Z*" + Pins.substr(0, 1) <<
-											" = " << "(" << ValueBauteile[0][0] << "*" << ValueBauteile[0][1] << ")" << "/" <<
-											"(" << DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << 
-											" + " << DreieckBauteile.at(2)->Name << ")" << endl;
+			/********************************************************
+			Êrstes bauteil wird gebildet und ausgegeben
+			********************************************************/
 
-			string BufferStr = "Z*" + Pins.substr(0, 1) +
-				" = " + "(" + ValueBauteile[0][0] + "*" + ValueBauteile[0][1] + ")" + "/" +
-				"(" + DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +
-				" + " + DreieckBauteile.at(2)->Name + ")";
-			char* Buffer = new char[BufferStr.size() + 1];
+			Bauteile.push_back(new Bauteil("Z*" +		
+				Pins.substr(0, 1), "Z",
+				Pins.substr(0, 1), "*"));
+
+			cout << "Zusammenfassung: " << "Z*" + Pins.substr(0, 1) <<" = " << "(" << 
+				ValueBauteile[0][0] << "*" << ValueBauteile[0][1] << ")" << "/" << "(" << 
+				DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << " + " << 
+				DreieckBauteile.at(2)->Name << ")" << endl;
+
+			string BufferStr = "Z*" + Pins.substr(0, 1) + " = " + "(" + 
+				ValueBauteile[0][0] + "*" + ValueBauteile[0][1] + ")" + "/" +"(" +				//Die Grafische Ausgabe wird vorbereitet
+				DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +" + " +		//Dafür wird Speicherplatz freigegeben 
+				DreieckBauteile.at(2)->Name + ")";												//Und der konvertierte String hinkopiert
+																								
+			char* Buffer = new char[BufferStr.size() + 1];										//Anschließend kann die Adresse an die graf Ausg.
+																								//übergeben werden.
 			strcpy(Buffer, BufferStr.c_str());
 
 			GraphicOutput.push_back(Buffer);
 
-			Bauteile.push_back(new Bauteil("Z*" + Pins.substr(1, 1), "Z",
-											Pins.substr(1, 1), "*"));
-			cout << "Zusammenfassung: " << "Z*" + Pins.substr(1, 1) <<
-											" = " << "(" << ValueBauteile[1][0] << "*" << ValueBauteile[1][1] << ")" << "/" <<
-											"(" << DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << 
-											" + " << DreieckBauteile.at(2)->Name << ")" << endl;
+			/********************************************************
+			Zweites bauteil wird gebildet und ausgegeben
+			********************************************************/
 
-			BufferStr = "Z*" + Pins.substr(1, 1) +
-				" = " + "(" + ValueBauteile[1][0] + "*" + ValueBauteile[1][1] + ")" + "/" +
-				"(" + DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +
-				" + " + DreieckBauteile.at(2)->Name + ")";
+			Bauteile.push_back(new Bauteil("Z*" + 
+				Pins.substr(1, 1), "Z",
+				Pins.substr(1, 1), "*"));
+
+			cout << "Zusammenfassung: " << "Z*" + Pins.substr(1, 1) << " = " << "(" << 
+				ValueBauteile[1][0] << "*" << ValueBauteile[1][1] << ")" << "/" <<"(" << 
+				DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << " + " << 
+				DreieckBauteile.at(2)->Name << ")" << endl;
+
+			BufferStr = "Z*" + Pins.substr(1, 1) + " = " + "(" + 
+				ValueBauteile[1][0] + "*" + ValueBauteile[1][1] + ")" + "/" +"(" + 
+				DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name + " + " + 
+				DreieckBauteile.at(2)->Name + ")";
+
 			Buffer = new char[BufferStr.size() + 1];
 			strcpy(Buffer, BufferStr.c_str());
 
 			GraphicOutput.push_back(Buffer);
 
-			Bauteile.push_back(new Bauteil("Z*" + Pins.substr(2, 1), "Z",
-											Pins.substr(2, 1), "*"));
-			cout << "Zusammenfassung: " << "Z*" + Pins.substr(2, 1) <<
-											" = " << "(" << ValueBauteile[2][0] << "*" << ValueBauteile[2][1] << ")" << "/" <<
-											"(" << DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << 
-											" + " << DreieckBauteile.at(2)->Name << ")" << endl;
+			/********************************************************
+			Drittes bauteil wird gebildet und ausgegeben
+			********************************************************/
 
-			BufferStr = "Z*" + Pins.substr(2, 1) +
-				" = " + "(" + ValueBauteile[2][0] + "*" + ValueBauteile[2][1] + ")" + "/" +
-				"(" + DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +
-				" + " + DreieckBauteile.at(2)->Name + ")";
+			Bauteile.push_back(new Bauteil("Z*" + 
+				Pins.substr(2, 1), "Z",
+				Pins.substr(2, 1), "*"));
+
+			cout << "Zusammenfassung: " << "Z*" + Pins.substr(2, 1) << " = " << "(" << 
+				ValueBauteile[2][0] << "*" << ValueBauteile[2][1] << ")" << "/" << "(" << 
+				DreieckBauteile.at(0)->Name << " + " << DreieckBauteile.at(1)->Name << " + " << 
+				DreieckBauteile.at(2)->Name << ")" << endl;
+
+			BufferStr = "Z*" + Pins.substr(2, 1) + " = " + "(" + 
+				ValueBauteile[2][0] + "*" + ValueBauteile[2][1] + ")" + "/" + "(" + 
+				DreieckBauteile.at(0)->Name + " + " + DreieckBauteile.at(1)->Name +" + " + 
+				DreieckBauteile.at(2)->Name + ")";
+
 			Buffer = new char[BufferStr.size() + 1];
 			strcpy(Buffer, BufferStr.c_str());
 
@@ -445,12 +602,12 @@ bool DreieckAdjazenz() {
 			GraphicOutput.push_back("");
 			
 
-	int Size = Bauteile.size();
-	for (int i = 0; i < Size; i++) {
+	int Size = Bauteile.size();																//Die Zusammen gefassten Bauteile
+	for (int i = 0; i < Size; i++) {														//werden gelöscht
 		if (Bauteile.at(i)->Name == DreieckBauteile.at(0)->Name) {
 			Bauteile.erase(Bauteile.begin() + i);
-			i = -1;
-		}
+			i = -1;																			//Iterator dekremtent um das gelöschte Element
+		}																					//zu beachten
 		else if (Bauteile.at(i)->Name == DreieckBauteile.at(1)->Name) {
 			Bauteile.erase(Bauteile.begin() + i);
 			i = -1;
@@ -459,25 +616,19 @@ bool DreieckAdjazenz() {
 			Bauteile.erase(Bauteile.begin() + i);
 			i = -1;
 		}
-		Size = Bauteile.size();
-	}
+		Size = Bauteile.size();																//Endpunkt immer anpassen um nicht über
+	}																						//den Vektor hinaus zu  lesen
 	return true;
 }
 
-void Uebertragungsfkt() {
-	Bauteil Ground;
-	Bauteil Input;
-	Bauteil Output;
-
-	for (int i = 0; i < Bauteile.size(); i++) {
-		if ((Bauteile.at(i)->Pin1 == Netzwerk.INPUT) || (Bauteile.at(i)->Pin2 == Netzwerk.INPUT))Input = *Bauteile.at(i);
-		else if ((Bauteile.at(i)->Pin1 == Netzwerk.OUTPUT) || (Bauteile.at(i)->Pin2 == Netzwerk.OUTPUT))Output = *Bauteile.at(i);
-		else if ((Bauteile.at(i)->Pin1 == Netzwerk.CMN) || (Bauteile.at(i)->Pin2 == Netzwerk.CMN))Ground = *Bauteile.at(i);
-	}
-
-}
 
 char * InputImpedanz() {
+	/*********************************************************
+	Nachdem das Netzwerk maximal zusammengefasst wurde ermittelt
+	diese Funktion das Bauteil, dass sich an am Eingang befindet
+	und gibt einen Pointer auf den Namen zurück
+	***********************************************************/
+
 	string Input;
 
 	for (int i = 0; i < Bauteile.size(); i++) {
@@ -491,6 +642,12 @@ char * InputImpedanz() {
 }
 
 char * CMNImpedanz() {
+	/*********************************************************
+	Nachdem das Netzwerk maximal zusammengefasst wurde ermittelt
+	diese Funktion das Bauteil, dass sich an am Ground befindet
+	und gibt einen Pointer auf den Namen zurück
+	***********************************************************/
+
 	string CMN;
 
 	for (int i = 0; i < Bauteile.size(); i++) {
@@ -505,6 +662,11 @@ char * CMNImpedanz() {
 }
 
 void THE_ALGORITHM() {
+	/*********************************************************
+	In dieser Funktion werden die von uns programmierten 
+	Funktionen möglichst intelligent aufgerufen um das RLC
+	Netzwerk zusammen zu fassen.
+	***********************************************************/
 	int serialLimit = Bauteile.size();
 	int parallelLimit = Bauteile.size();
 	GraphicOutput.push_back("********************************");
@@ -732,8 +894,6 @@ void user_main()
 			TokenBauteil(BauteilToken);
 
 			THE_ALGORITHM();
-
-			Uebertragungsfkt();
 
 			print_network();
 		}
