@@ -305,21 +305,21 @@ vector<Bauteil*> SternFind(vector<vector<Bauteil*>> AdjazenzMatrix, string Pins)
 	int rows = Pins.size();
 	int cols = Pins.size();
 
-	for (int outer = 0; outer < rows; outer++) {									//DENNIS HIER!
-		for (int i = 0; i < rows; i++) {
-			if (AdjazenzMatrix[i][outer] != NULL) {
+	for (int outer = 0; outer < rows; outer++) {									// Durchgehen der Pins (outer) in der Adjazenzmatrix zur Überprüfung ob an einem Pin sich genau 3 Bauteile befinden -> Stern
+		for (int i = 0; i < rows; i++) {	
+			if (AdjazenzMatrix[i][outer] != NULL) {									//Überprüfung der Zeilen ob an Pin "outer" sich Bauteile befinden 
 				SternCounter++;
 				SternBauteile.push_back(AdjazenzMatrix[i][outer]);
 			}
-			if (AdjazenzMatrix[outer][i] != NULL) {
+			if (AdjazenzMatrix[outer][i] != NULL) {									//Überprüfung der Spalten ob an Pin "outer" sich Bauteile befinden
 				SternCounter++;
 				SternBauteile.push_back(AdjazenzMatrix[outer][i]);
 			}
 		}
 
 		if (SternCounter == 3) {
-			if ((Pins.substr(outer, 1) != Netzwerk.CMN) &&
-				(Pins.substr(outer, 1) != Netzwerk.OUTPUT) &&
+			if ((Pins.substr(outer, 1) != Netzwerk.CMN) &&							//Abfangen für den Fall, dass der Sternpin sich an Ground, Output oder Input befindet
+				(Pins.substr(outer, 1) != Netzwerk.OUTPUT) &&						//Dies kann, bzw. darf nicht passieren da der Sternpin gelöscht wird, bzw. umgeformt
 				(Pins.substr(outer, 1) != Netzwerk.INPUT)) return SternBauteile;
 		}
 		SternCounter = 0;
@@ -338,7 +338,7 @@ void SternAdjazenz() {
 
 	for (int i = 0; i < Bauteile.size(); i++) {
 
-		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {									//DENNIS HIER
+		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {									//for-Schleife zum extrahieren aller noch verwendeten Pins und speichern in einem String
 			Pins = Pins + Bauteile.at(i)->Pin1;
 		}
 		if (Pins.find(Bauteile.at(i)->Pin2) == Pins.npos) {
@@ -350,12 +350,12 @@ void SternAdjazenz() {
 	vector<vector<Bauteil*>> AdjazenzMatrix;												//Eine matrix mit Bauteile.size*Bauteile.size
 	AdjazenzMatrix.resize(rows);															//Diese ist vom Typ Bauteil
 
-	for (int i = 0; i < rows; i++) {
+	for (int i = 0; i < rows; i++) {														//Aufbau einer Adjazenz Matrix vom Typ Class Bauteil mit der Länge und Breite unserer Pinanzahl
 		AdjazenzMatrix[i].resize(cols);
 	}
-	for (int i = 0; i < Bauteile.size(); i++) {												//DENNIS HIER
-		AdjazenzMatrix[Pins.find(Bauteile.at(i)->Pin1)]
-					  [Pins.find(Bauteile.at(i)->Pin2)] = Bauteile.at(i);
+	for (int i = 0; i < Bauteile.size(); i++) {												
+		AdjazenzMatrix[Pins.find(Bauteile.at(i)->Pin1)]										//Befüllen der Matrix mit den Bauteilen ensprechend der Reihenfolge, wie sie im String Pins aufgreiht wurden
+					  [Pins.find(Bauteile.at(i)->Pin2)] = Bauteile.at(i);					//und entsprechend wie sie mit diesen Pins verbunden sind
 	}
 
 	SternBauteile = SternFind(AdjazenzMatrix, Pins);										//Sternbauteile werden gesucht und wenn 
@@ -511,9 +511,9 @@ bool DreieckAdjazenz() {
 	vector<vector<string>> ValueBauteile;
 	ValueBauteile.resize(Pins.size());
 
-	for (int i = 0; i < DreieckBauteile.size(); i++) {									//DENNIS HIER
-		for (int ii = 0; ii < Pins.size(); ii++) {
-			if (DreieckBauteile.at(i)->Pin1 == Pins.substr(ii, 1)) { 
+	for (int i = 0; i < DreieckBauteile.size(); i++) {									//Durchlaufen der Bauteile und Pins, speichern der Bauteile in eine Matrix
+		for (int ii = 0; ii < Pins.size(); ii++) {										//Entsprechend der Stelle wie die Pins im String Pins auftreten, werden sie in den Zeilen der Matrix gespeichert
+			if (DreieckBauteile.at(i)->Pin1 == Pins.substr(ii, 1)) {					//Auf den Spalten der Matrix stehen immer zwei Bauteile, da in einer Dreiecksform immer zwei Bauteile einem bestimmten Pin zugeordnet werden kann.
 				ValueBauteile[ii].push_back(DreieckBauteile.at(i)->Name); 
 			}
 			else if (DreieckBauteile.at(i)->Pin2 == Pins.substr(ii, 1)) {
@@ -699,6 +699,12 @@ void THE_ALGORITHM() {
 
 //USER FUNCTIONS
 string NetworkInput() {
+	/*********************************************************
+	Funktion zum Abfragen des Netzwerk-Strings in Form von 
+	"a:IN; b:Out; c: CMN; d,e: Internal;"
+	Funktion erfasst den String und entfernt alle Leerzeichen 
+	und gibt das Ergebnis als Return-Wert aus.
+	***********************************************************/
 	string InputBuffer;
 	string SpaceLess = "";
 	string separator = ";\n";
@@ -707,35 +713,32 @@ string NetworkInput() {
 	int endpos = 0;
 	int startpos, spacepos = 0;
 	int wordCount = 1;
-
+																								//Input von Netzwerk-String über Standard Eingabe
 	//cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";		//Disabled for Testing
 	//getline(cin, InputBuffer);
 	//cout << "Registered String:\t" << InputBuffer << endl;
 
-	InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";			// For Testing only
+	InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";										// For Testing only
 
-	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
+	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {									//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
 		if (isspace(InputBuffer[spacepos])) {
 			spacepos++;
 			if (spacepos == InputBuffer.size()) break;
 		}
-		SpaceLess = SpaceLess + InputBuffer[spacepos];
-	}
+		SpaceLess = SpaceLess + InputBuffer[spacepos];											//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
+	}	
 	std::cout << SpaceLess << "\n";
-
-	//while (1){
-	//	startpos = SpaceLess.find_first_not_of(separator, endpos);
-	//	if (startpos == SpaceLess.npos)break;
-	//	endpos = SpaceLess.find_first_of(separator, startpos);
-	//	if (endpos == SpaceLess.npos)break;
-	//	token = SpaceLess.substr(startpos, endpos - startpos);
-
-	//	cout  << token << endl;
-	//}
 
 	return SpaceLess;
 }
 string BauteilInput() {
+	/*********************************************************
+	Funktion zum Abfragen des Bauteile-Strings in Form von
+	"R1:R(a, d); C2:C(d, b); L4:L(b, c);"
+	Funktion erfasst den String und entfernt alle Leerzeichen
+	und gibt das Ergebnis als Return-Wert aus.
+	***********************************************************/
+
 	string InputBuffer;
 	string SpaceLess = "";
 	string separator = ";\n";
@@ -759,29 +762,27 @@ string BauteilInput() {
 	}
 	cout << SpaceLess << "\n";
 
-	//while (1){
-	//	startpos = SpaceLess.find_first_not_of(separator, endpos);
-	//	if (startpos == SpaceLess.npos)break;
-	//	endpos = SpaceLess.find_first_of(separator, startpos);
-	//	if (endpos == SpaceLess.npos)break;
-	//	token = SpaceLess.substr(startpos, endpos - startpos);
-
-	//	cout  << token << endl;
-	//}
-
 	return SpaceLess;
 }
 int TokenNetwork(string Token) {
+	/*********************************************************
+	Funktion zum Bearbeiten des von Leerzeichen befreiten
+	Netzwerk-Strings.
+	Funktion bearbeitet den String, extrahiert alle Pins, welche
+	angegeben sind und erstellt ein Netzwerk entsprechend
+	der Network Class und ensprechend ihrer Zuordnungen
+	***********************************************************/
+
 	int startPos = 0, endPos = 0;
 	int CommaPosCheck;
 	string separator = ";";
 	string subToken[3];
 	vector<string> Internals;
 
-	if (Token.find("IN") == Token.npos)return -1;
-	startPos = Token.find_first_not_of(separator, startPos);
-	endPos = Token.find_first_of(':', startPos);
-	subToken[0] = Token.substr(startPos, endPos - startPos);
+	if (Token.find("IN") == Token.npos)return -1;						//Überprüfen, ob sich "IN" im String befindet falls nicht return -1;
+	startPos = Token.find_first_not_of(separator, startPos);			//Suche des ersten Zeichens, welches kein ; ist, setze Position als Startwert 
+	endPos = Token.find_first_of(':', startPos);						//Suche des ersten : welches die Abtrennung des Pin Namens und Art darstellt, setze Position als Endwert
+	subToken[0] = Token.substr(startPos, endPos - startPos);			//Entnehmen String zwischen Start und Ende, welches hier den Pin Namen darstellt
 
 	if (Token.find("Out") == Token.npos)return -1;
 	startPos = Token.find_first_of(';', endPos);
@@ -801,44 +802,52 @@ int TokenNetwork(string Token) {
 	endPos = Token.find_first_of(':', startPos);
 	while (startPos != endPos) {
 
-		CommaPosCheck = Token.find_first_of(',', startPos);
-		if (CommaPosCheck == Token.npos) CommaPosCheck = Token.find_first_of(':', startPos);
-		Internals.push_back(Token.substr(startPos, CommaPosCheck - startPos));
-		startPos = Token.find_first_not_of(',', CommaPosCheck);
+		CommaPosCheck = Token.find_first_of(',', startPos);												//Da bei den Internal Pins mehrere Pins vorhanden sein können, müssen hier die Namen getrennt werden
+		if (CommaPosCheck == Token.npos) CommaPosCheck = Token.find_first_of(':', startPos);			//Falls keine "," mehr gefunden werden können sind alle Pins gefunden werden und ":" muss als Ende gesehen werden
+		Internals.push_back(Token.substr(startPos, CommaPosCheck - startPos));							//Extrahieren des einzelnen Pins
+		startPos = Token.find_first_not_of(',', CommaPosCheck);											//Starten beim nächsten Pin
 	}
 
-	Netzwerk = Network(subToken[0], subToken[1], subToken[2], Internals);
+	Netzwerk = Network(subToken[0], subToken[1], subToken[2], Internals);								//Erstellen eines neuen Netzwerks ensprechend unserer Network Class
 	return 0;
 }
 void TokenBauteil(string Token) {
+	/*********************************************************
+	Funktion zum Bearbeiten des von Leerzeichen befreiten
+	Bauteile-Strings.
+	Funktion bearbeitet den String und erstellt eine Bauteil Class
+	in welcher die verschiedenen Bauteile anhand ihres Namens, Art,
+	und Pins gespeichert werden
+	***********************************************************/
+
 	int startPos = 0, endPos = 0;
 	char separator;
 	string subToken[4];
 
 	while (startPos != Token.npos) {
 
-		separator = ':';
+		separator = ':';												//Extrahieren des Namens, welcher bis zu dem Separator ":" gekennzeichnet wird
 		endPos = Token.find_first_of(separator, startPos);
 		subToken[0] = Token.substr(startPos, endPos - startPos);
 		startPos = Token.find_first_not_of(separator, endPos);
 
-		separator = '(';
+		separator = '(';												//Extrahieren der Art, welche bis zu dem Separator "(" gekennzeichnet wird
 		endPos = Token.find_first_of(separator, startPos);
 		subToken[1] = Token.substr(startPos, endPos - startPos);
 		startPos = Token.find_first_not_of(separator, endPos);
 
-		separator = ',';
+		separator = ',';												//Extrahieren des 1. Pins, welcher bis zu dem Separator "," gekennzeichnet wird
 		endPos = Token.find_first_of(separator, startPos);
 		subToken[2] = Token.substr(startPos, endPos - startPos);
 		startPos = Token.find_first_not_of(separator, endPos);
 
-		separator = ')';
-		endPos = Token.find_first_of(separator, startPos);
+		separator = ')';												//Extrahieren des 2. Pins, welcher bis zu dem Separator ")" gekennzeichnet wird
+		endPos = Token.find_first_of(separator, startPos);		
 		subToken[3] = Token.substr(startPos, endPos - startPos);
 		startPos = Token.find_first_of(';', endPos);
 		startPos = Token.find_first_not_of(';', startPos);
 
-		Bauteile.push_back(new Bauteil(subToken[0], subToken[1], subToken[2], subToken[3]));
+		Bauteile.push_back(new Bauteil(subToken[0], subToken[1], subToken[2], subToken[3]));		//Erstellen einer neuen Bauteile Class mit extrahierter Information
 	}
 }
 
@@ -890,10 +899,10 @@ void user_main()
 			NetworkToken = NetworkInput();			//Getting rid of spaces and cutting in blocks separated by ;
 			BauteilToken = BauteilInput();
 
-			TokenNetwork(NetworkToken);
+			TokenNetwork(NetworkToken);				//Aufbau von Netzwerk und Bauteilen
 			TokenBauteil(BauteilToken);
 
-			THE_ALGORITHM();
+			THE_ALGORITHM();						//Ausführen des Zusammenfassungsalgorithmus
 
 			print_network();
 		}
