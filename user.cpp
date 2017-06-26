@@ -34,6 +34,7 @@ const int INTEGER1 = 5;
 const int TOKENSTART = 300;
 
 //USER PROGRAMM
+vector<string>SpaceLess;
 string BauteilToken, NetworkToken;
 
 class Network {
@@ -709,41 +710,62 @@ void THE_ALGORITHM() {
 
 
 //USER FUNCTIONS
-string NetworkInput() {
+void NetworkInput() {
 	/*********************************************************
 	Funktion zum Abfragen des Netzwerk-Strings in Form von 
 	"a:IN; b:Out; c: CMN; d,e: Internal;"
 	Funktion erfasst den String und entfernt alle Leerzeichen 
 	und gibt das Ergebnis als Return-Wert aus.
 	***********************************************************/
-	string InputBuffer;
-	string SpaceLess = "";
+	vector <string> InputBuffer;
+	string StreamBuffer;
+	string BauteilBuffer;
+	string NetzwerkBuffer;
 	string separator = ";\n";
 	string Token;
 
-	int endpos = 0;
-	int startpos, spacepos = 0;
-	int wordCount = 1;
+	ifstream FILE;
+
+	FILE.open("C:/Users/Knoedel/Desktop/Schaltung.txt");
 																								//Input von Netzwerk-String über Standard Eingabe
-	cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";		//Disabled for Testing
-	getline(cin, InputBuffer);
-
-	if (InputBuffer == "") {
-		InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";										// For Testing only
-		cout << "Default: " << InputBuffer << endl << endl;
+	//cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";		//Disabled for Testing
+	//getline(cin, InputBuffer);
+	while (!FILE.eof()) {
+		getline(FILE, StreamBuffer);
+		InputBuffer.push_back(StreamBuffer);
 	}
-	else cout << "Registered String:\t" << InputBuffer << endl << endl;
+	FILE.close();
 
-	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {									//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
-		if (isspace(InputBuffer[spacepos])) {
+	NetzwerkBuffer = InputBuffer[0];
+	BauteilBuffer = InputBuffer[1] + InputBuffer[2] + InputBuffer[3];
+
+	if (NetzwerkBuffer == "") {
+		NetzwerkBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";										// For Testing only
+		cout << "Default: " << NetzwerkBuffer << endl << endl;
+	}
+	else cout << "Registered String:\t" << NetzwerkBuffer << endl << endl;
+
+	SpaceLess.resize(2);
+	SpaceLess[0] = "";
+	SpaceLess[1] = "";
+
+	for (int spacepos = 0; spacepos < NetzwerkBuffer.size(); spacepos++) {									//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
+		if (isspace(NetzwerkBuffer[spacepos])) {
 			spacepos++;
-			if (spacepos == InputBuffer.size()) break;
+			if (spacepos == NetzwerkBuffer.size()) break;
 		}
-		SpaceLess = SpaceLess + InputBuffer[spacepos];											//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
+		SpaceLess[0] = SpaceLess[0] + NetzwerkBuffer[spacepos];											//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
 	}	
+	for (int spacepos = 0; spacepos < BauteilBuffer.size(); spacepos++) {									//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
+		if (isspace(BauteilBuffer[spacepos])) {
+			spacepos++;
+			if (spacepos == BauteilBuffer.size()) break;
+		}
+		SpaceLess[1] = SpaceLess[1] + BauteilBuffer[spacepos];											//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
+	}
 	//cout << SpaceLess << "\n";
 
-	return SpaceLess;
+	return;
 }
 string BauteilInput() {
 	/*********************************************************
@@ -791,7 +813,7 @@ int TokenNetwork(string Token) {
 	der Network Class und ensprechend ihrer Zuordnungen
 	***********************************************************/
 
-	int startPos = 0, endPos = 0;
+	int startPos = 5, endPos = 0;
 	int CommaPosCheck;
 	string separator = ";";
 	string subToken[3];
@@ -914,8 +936,11 @@ void user_main()
 			SetConsoleWindowTop();
 			Sleep(1000);
 
-			NetworkToken = NetworkInput();			//Getting rid of spaces and cutting in blocks separated by ;
-			BauteilToken = BauteilInput();
+			NetworkInput();			//Getting rid of spaces and cutting in blocks separated by ;
+			//BauteilToken = BauteilInput();
+
+			NetworkToken = SpaceLess[0];
+			BauteilToken = SpaceLess[1];
 
 			TokenNetwork(NetworkToken);				//Aufbau von Netzwerk und Bauteilen
 			TokenBauteil(BauteilToken);

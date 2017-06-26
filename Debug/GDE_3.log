@@ -1,49 +1,49 @@
 ﻿  user.cpp
-c:\users\knoedel\desktop\git\user.cpp(134): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(135): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(165): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(249): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(245): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(166): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(250): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(246): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(271): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(274): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(284): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(292): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(347): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(364): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(385): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(272): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(275): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(285): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(293): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(348): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(365): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
 c:\users\knoedel\desktop\git\user.cpp(386): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(420): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(387): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(421): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(444): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(445): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(468): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(469): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(505): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(522): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(506): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
 c:\users\knoedel\desktop\git\user.cpp(523): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(560): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(524): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(561): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(583): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(584): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(606): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(607): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(642): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(647): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(643): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(648): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(661): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(666): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(662): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(667): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(689): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(694): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(737): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(725): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\knoedel\desktop\git\user.cpp(774): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(762): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\knoedel\desktop\git\user.cpp(951): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(939): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(690): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(695): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(752): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(759): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(796): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(784): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(976): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(964): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\knoedel\desktop\git\user.cpp(178): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
-c:\users\knoedel\desktop\git\user.cpp(336): warning C4715: "SternFind": Nicht alle Codepfade geben einen Wert zurück.
+c:\users\knoedel\desktop\git\user.cpp(179): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
+c:\users\knoedel\desktop\git\user.cpp(337): warning C4715: "SternFind": Nicht alle Codepfade geben einen Wert zurück.
   GDE_3.vcxproj -> C:\Users\Knoedel\Desktop\git\Debug\GDE_3.exe
   GDE_3.vcxproj -> Debug\GDE_3.pdb (Full PDB)
