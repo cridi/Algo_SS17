@@ -1,47 +1,49 @@
 ﻿  user.cpp
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(134): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(134): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(165): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(241): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(263): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(266): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(276): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(284): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(339): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(356): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(377): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(378): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(412): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(165): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(249): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(245): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(436): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(271): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(274): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(284): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(292): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(347): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(364): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(385): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(386): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(420): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(460): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(444): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(497): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(514): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(515): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(552): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(468): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(575): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(505): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(522): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(523): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(560): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(598): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(583): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(634): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(639): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(606): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(653): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(658): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(642): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(647): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(679): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(684): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(717): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(708): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(753): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(745): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(918): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(910): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(661): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(666): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(178): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
-c:\users\chris\documents\visual studio 2017\algo_ss17\user.cpp(328): warning C4715: "SternFind": Nicht alle Codepfade geben einen Wert zurück.
-  GDE_3.vcxproj -> C:\Users\chris\Documents\Visual Studio 2017\Algo_SS17\Debug\GDE_3.exe
+c:\users\knoedel\desktop\git\user.cpp(689): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(694): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(737): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(725): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(774): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(762): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(951): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(939): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
+c:\users\knoedel\desktop\git\user.cpp(178): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
+c:\users\knoedel\desktop\git\user.cpp(336): warning C4715: "SternFind": Nicht alle Codepfade geben einen Wert zurück.
+  GDE_3.vcxproj -> C:\Users\Knoedel\Desktop\git\Debug\GDE_3.exe
   GDE_3.vcxproj -> Debug\GDE_3.pdb (Full PDB)

@@ -120,7 +120,7 @@ void Is_parallel() {
 						Bauteile.push_back(new Bauteil(Bauteile.at(i)->Name 
 							+ "||" +												//Neues Bauteil mit den Namen der Bauteile die
 							Bauteile.at(ii)->Name,									//getrennt von einem ||
-							Bauteile.at(i)->Art, 
+							"Z", 
 							Bauteile.at(i)->Pin1,									//Da beide Bauteile an den gleichen Pins hängen
 							Bauteile.at(i)->Pin2));			
 
@@ -231,12 +231,20 @@ void create_new_serial_Bauteil() {
 
 	Bauteile.push_back(new Bauteil("(" + serial_Bauteile.at(0)->Name + " + " +  //Ein neues serielles Bauteil wird erstellt.
 									serial_Bauteile.at(1)->Name + ")",			//Der Name besteht aus den beiden Namen der Bauteile
-									serial_Bauteile.at(1)->Art,					//und wird durch ein Plus getrennt.
+									"Z",										//und wird durch ein Plus getrennt.
 									serial_Bauteile.at(0)->Pin1,				//das Bauteil bekommt die äußeren Pins der einzelnen
 									serial_Bauteile.at(1)->Pin1));				//Bauteile
 	
 	cout << "Zusammenfassung: " << serial_Bauteile.at(0)->Name << "+" 
 		<< serial_Bauteile.at(1)->Name << endl;									//Ausgabe der Konsole
+
+	string BufferStr = serial_Bauteile.at(0)->Name + " + " +							//für die Ausgabe im GDE muss std::string konvertiert
+		serial_Bauteile.at(1)->Name;													//werden
+
+	char* Buffer = new char[BufferStr.size() + 1];								//Dafür wird Speicherplatz freigegeben 
+	strcpy(Buffer, BufferStr.c_str());											//Und der konvertierte String hinkopiert
+																				//Anschließend kann die Adresse an die graf Ausg.
+	GraphicOutput.push_back(Buffer);											//übergeben werden.
 
 	for (int i = 0; i < Bauteile.size(); i++) {
 		if (!(serial_Bauteile.at(0)->Name.compare(Bauteile.at(i)->Name)) ||		//Die Bauteile die zusammengefasst wurden 
@@ -504,7 +512,7 @@ bool DreieckAdjazenz() {
 		}
 	}
 
-	if (Pins.size() != 3)return false;													//Interessanterweise treten Dreiecke nur bei
+	if (Pins.size() != 3)return true;													//Interessanterweise treten Dreiecke nur bei
 																						//einer Netzwerkgröße von 3 auf. Sonst kann immer
 	DreieckBauteile = Bauteile;															//immer auch ein Stern gefunden werden.
 
@@ -676,14 +684,17 @@ void THE_ALGORITHM() {
 
 	for (int i = 0; i < 5; i++) {
 
-		for (unsigned int i = 0; i < serialLimit; i++) {
-			Is_serial();
-			serialLimit = Bauteile.size();
-		}
+		for (int SerialParallel = 0; SerialParallel < 5; SerialParallel++) {
 
-		for (unsigned int i = 0; i < parallelLimit; i++) {
-			Is_parallel();
-			parallelLimit = Bauteile.size();
+			for (unsigned int serial = 0; serial < serialLimit; serial++) {
+				Is_serial();
+				serialLimit = Bauteile.size();
+			}
+
+			for (unsigned int parallel = 0; parallel < parallelLimit; parallel++) {
+				Is_parallel();
+				parallelLimit = Bauteile.size();
+			}
 		}
 
 		if (Bauteile.size() == 3) {
@@ -714,11 +725,14 @@ string NetworkInput() {
 	int startpos, spacepos = 0;
 	int wordCount = 1;
 																								//Input von Netzwerk-String über Standard Eingabe
-	//cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";		//Disabled for Testing
-	//getline(cin, InputBuffer);
-	//cout << "Registered String:\t" << InputBuffer << endl;
+	cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";		//Disabled for Testing
+	getline(cin, InputBuffer);
 
-	InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";										// For Testing only
+	if (InputBuffer == "") {
+		InputBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";										// For Testing only
+		cout << "Default: " << InputBuffer << endl << endl;
+	}
+	else cout << "Registered String:\t" << InputBuffer << endl << endl;
 
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {									//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
 		if (isspace(InputBuffer[spacepos])) {
@@ -727,7 +741,7 @@ string NetworkInput() {
 		}
 		SpaceLess = SpaceLess + InputBuffer[spacepos];											//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
 	}	
-	std::cout << SpaceLess << "\n";
+	//cout << SpaceLess << "\n";
 
 	return SpaceLess;
 }
@@ -748,11 +762,15 @@ string BauteilInput() {
 	int startpos, spacepos = 0;
 	int wordCount = 1;
 
-	//cout << "Enter String in Format: R1:R(a, d); C2:C(d, b); L4:L(b, c)";			// Disabled for Testing
-	//getline(cin, InputBuffer);
-	//cout << "Registered String:\t" << InputBuffer << endl;
+	cout << "Enter String in Format: R1:R(a, d); C2:C(d, b); L4:L(b, c);\n" << "Bauteile:\t";			// Disabled for Testing
+	getline(cin, InputBuffer);
 
-	InputBuffer = "R1:R(a, e); R2:R(e, d); R3:R(d, b); R4:R(e, b); L1:L(a, d); L2:L(e, c); C1:C(a,c); C2:C(e,b); ";			// For Testing only 
+	if (InputBuffer == "") {
+		InputBuffer = "R1:R(a, d); C2:C(d, b); L4:L(b, c);";			// For Testing only 
+		cout << "Default: " << InputBuffer << endl << endl;
+	}
+	else cout << "Registered String:\t" << InputBuffer << endl << endl;
+
 	for (spacepos; spacepos < InputBuffer.size(); spacepos++) {
 		if (isspace(InputBuffer[spacepos])) {
 			spacepos++;
@@ -760,7 +778,7 @@ string BauteilInput() {
 		}
 		SpaceLess = SpaceLess + InputBuffer[spacepos];
 	}
-	cout << SpaceLess << "\n";
+	//cout << SpaceLess << "\n";
 
 	return SpaceLess;
 }
@@ -912,17 +930,23 @@ void user_main()
 		int height = 10;
 		int width = hh / 2;
 
-		string Nenner = CMNImpedanz();
-		Nenner.append(" + ");
-		Nenner.append(InputImpedanz());
-		char* NennerP = new char[Nenner.size() + 1];
-		strcpy(NennerP, Nenner.c_str());
+		if (Bauteile.size() >= 2 && InputImpedanz() != NULL) {
 
+			string Nenner = CMNImpedanz();
+			Nenner.append(" + ");
+			Nenner.append(InputImpedanz());
+			char* NennerP = new char[Nenner.size() + 1];
+			strcpy(NennerP, Nenner.c_str());
 
-		text(0, 35, 30, BLACK, "G=");
-		text(35, 25, 25, BLACK, CMNImpedanz());
-		line(30, 50, 120, 50, BLACK);
-		text(35, 50, 25, BLACK, NennerP);
+			text(0, 35, 30, BLACK, "G=");
+			text(35, 25, 25, BLACK, CMNImpedanz());
+			line(30, 50, 11*Nenner.size(), 50, BLACK);
+			text(35, 50, 25, BLACK, NennerP);
+		}
+		else {
+			text(0, 35, 30, BLACK, "G=");
+			text(35, 35, 30, BLACK, "1");
+		}
 
 		for (int i = 0; i < GraphicOutput.size(); i++) {
 			text(width, height, 15, BLACK, GraphicOutput.at(i));
