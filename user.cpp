@@ -20,10 +20,10 @@ using namespace std;
 
 #include "math.h"
 
-#define _pi					3.1415926535				// Die Zahl Pi.
-#define _180_durch_pi		57.2957795147				// = 180 * pi. Dient zur Laufzeitoptinierung.
-#define _sinus(winkel)		sin((winkel) / _180_durch_pi)	// Funktion im Gradmass.
-#define _cosinus(winkel)	cos((winkel) / _180_durch_pi)	// Funktion im Gradmass.
+#define _pi					3.1415926535							// Die Zahl Pi.
+#define _180_durch_pi		57.2957795147							// = 180 * pi. Dient zur Laufzeitoptinierung.
+#define _sinus(winkel)		sin((winkel) / _180_durch_pi)			// Funktion im Gradmass.
+#define _cosinus(winkel)	cos((winkel) / _180_durch_pi)			// Funktion im Gradmass.
 
 COLORREF Colref[] = { BLACK,RED,GREEN,BLUE,YELLOW,BROWN };
 int Colind = 0;
@@ -239,8 +239,8 @@ void create_new_serial_Bauteil() {
 	cout << "Zusammenfassung: " << serial_Bauteile.at(0)->Name << "+" 
 		<< serial_Bauteile.at(1)->Name << endl;									//Ausgabe der Konsole
 
-	string BufferStr = serial_Bauteile.at(0)->Name + " + " +							//für die Ausgabe im GDE muss std::string konvertiert
-		serial_Bauteile.at(1)->Name;													//werden
+	string BufferStr = serial_Bauteile.at(0)->Name + " + " +					//für die Ausgabe im GDE muss std::string konvertiert
+		serial_Bauteile.at(1)->Name;											//werden
 
 	char* Buffer = new char[BufferStr.size() + 1];								//Dafür wird Speicherplatz freigegeben 
 	strcpy(Buffer, BufferStr.c_str());											//Und der konvertierte String hinkopiert
@@ -347,7 +347,7 @@ void SternAdjazenz() {
 
 	for (int i = 0; i < Bauteile.size(); i++) {
 
-		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {									//for-Schleife zum extrahieren aller noch verwendeten Pins und speichern in einem String
+		if (Pins.find(Bauteile.at(i)->Pin1) == Pins.npos) {								//for-Schleife zum extrahieren aller noch verwendeten Pins und speichern in einem String
 			Pins = Pins + Bauteile.at(i)->Pin1;
 		}
 		if (Pins.find(Bauteile.at(i)->Pin2) == Pins.npos) {
@@ -356,24 +356,24 @@ void SternAdjazenz() {
 	}
 	int rows = Pins.size();
 	int cols = Pins.size();
-	vector<vector<Bauteil*>> AdjazenzMatrix;												//Eine matrix mit Bauteile.size*Bauteile.size
-	AdjazenzMatrix.resize(rows);															//Diese ist vom Typ Bauteil
+	vector<vector<Bauteil*>> AdjazenzMatrix;											//Eine matrix mit Bauteile.size*Bauteile.size
+	AdjazenzMatrix.resize(rows);														//Diese ist vom Typ Bauteil
 
-	for (int i = 0; i < rows; i++) {														//Aufbau einer Adjazenz Matrix vom Typ Class Bauteil mit der Länge und Breite unserer Pinanzahl
+	for (int i = 0; i < rows; i++) {													//Aufbau einer Adjazenz Matrix vom Typ Class Bauteil mit der Länge und Breite unserer Pinanzahl
 		AdjazenzMatrix[i].resize(cols);
 	}
 	for (int i = 0; i < Bauteile.size(); i++) {												
-		AdjazenzMatrix[Pins.find(Bauteile.at(i)->Pin1)]										//Befüllen der Matrix mit den Bauteilen ensprechend der Reihenfolge, wie sie im String Pins aufgreiht wurden
-					  [Pins.find(Bauteile.at(i)->Pin2)] = Bauteile.at(i);					//und entsprechend wie sie mit diesen Pins verbunden sind
+		AdjazenzMatrix[Pins.find(Bauteile.at(i)->Pin1)]									//Befüllen der Matrix mit den Bauteilen ensprechend der Reihenfolge, wie sie im String Pins aufgreiht wurden
+					  [Pins.find(Bauteile.at(i)->Pin2)] = Bauteile.at(i);				//und entsprechend wie sie mit diesen Pins verbunden sind
 	}
 
-	SternBauteile = SternFind(AdjazenzMatrix, Pins);										//Sternbauteile werden gesucht und wenn 
-																							//vorhanden zurückgegeben
+	SternBauteile = SternFind(AdjazenzMatrix, Pins);									//Sternbauteile werden gesucht und wenn 
+																						//vorhanden zurückgegeben
 
 
-	if (SternBauteile.at(0)->Pin1 == SternBauteile.at(1)->Pin1){							//Es wird der Sternpin bestimmt
-		SternPin = SternBauteile.at(0)->Pin1;												//Der nach der Wandlung zum 3eck
-	}																						//gelöscht wird
+	if (SternBauteile.at(0)->Pin1 == SternBauteile.at(1)->Pin1){						//Es wird der Sternpin bestimmt
+		SternPin = SternBauteile.at(0)->Pin1;											//Der nach der Wandlung zum 3eck
+	}																					//gelöscht wird
 	else if (SternBauteile.at(0)->Pin1 == SternBauteile.at(1)->Pin2) {
 		SternPin = SternBauteile.at(0)->Pin1;
 	}
@@ -729,32 +729,49 @@ void NetworkInput() {
 
 	ifstream FILE;
 	string FilePath = "";
-												//Input von Path-String über Standard Eingabe
+																				//Input von Path-String über Standard Eingabe
 	cout << "Enter Circuit File Path:" << endl;
 	getline(cin, FilePath);
 
 	//"C:/Users/Knoedel/Desktop/Schaltung.txt"
-	FILE.open(FilePath, fstream::in);									//Öffnen der Datei im Modus Lesen
 
-	while (!FILE.eof()) {												//Einlesen der Zeilen bis zum Ende der File
+
+	if (FilePath == "") {
+		NetzwerkBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";					// Defaultwerte
+		cout << "Default: " << NetzwerkBuffer << endl << endl;
+
+		BauteilBuffer = "R1:R(a, d); C2:C(d, b); L4:L(b, c);";					// Defaultwerte 
+		cout << "No File found -> Default: " << BauteilBuffer << endl << endl;
+	}
+	else if (FilePath == "Beispiel 1") {
+		cout << "Beispiel 1 wird ausgeführt: " << endl;
+		FilePath = "C:/Users/chris/Documents/Visual Studio 2017/Algo_SS17/Schaltung1.txt";
+	}
+	else if (FilePath == "Beispiel 2") {
+		cout << "Beispiel 2 wird ausgeführt:" << endl;
+		FilePath = "C:/Users/chris/Documents/Visual Studio 2017/Algo_SS17/Schaltung2.txt";
+	}
+	else if (FilePath == "Beispiel 3") {
+		cout << "Beispiel 3 wird ausgeführt:"<< endl;
+		FilePath = "C:/Users/chris/Documents/Visual Studio 2017/Algo_SS17/Schaltung3.txt";
+
+	}
+	else {
+
+	}
+
+	FILE.open(FilePath, fstream::in);											//Öffnen der Datei im Modus Lesen
+
+	while (!FILE.eof()) {														//Einlesen der Zeilen bis zum Ende der File
 		getline(FILE, StreamBuffer);
 		InputBuffer.push_back(StreamBuffer);
 	}
 
-	NetzwerkBuffer = InputBuffer[0];									//Zeile fürs Netzwerk extrahieren
-	BauteilBuffer = InputBuffer[1] + InputBuffer[2] + InputBuffer[3];	//Zeilen für die Bauteile
+	NetzwerkBuffer = InputBuffer[0];											//Zeile fürs Netzwerk extrahieren
+	BauteilBuffer = InputBuffer[1] + InputBuffer[2] + InputBuffer[3];			//Zeilen für die Bauteile
 
-	if (FilePath == "") {
-		NetzwerkBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";						// For Testing only
-		cout << "Default: " << NetzwerkBuffer << endl << endl;
-
-		BauteilBuffer = "R1:R(a, d); C2:C(d, b); L4:L(b, c);";						// For Testing only 
-		cout << "No File found -> Default: " << BauteilBuffer << endl << endl;
-	}
-	else {
-		cout << "Registered String:\t" << NetzwerkBuffer << endl << endl;
-		cout << "Registered String:\t" << BauteilBuffer << endl << endl;
-	}
+	cout << "Registered String:\t" << NetzwerkBuffer << endl << endl;
+	cout << "Registered String:\t" << BauteilBuffer << endl << endl;
 
 	FILE.close();
 
@@ -804,7 +821,7 @@ string BauteilInput() {
 	getline(cin, InputBuffer);
 
 	if (InputBuffer == "") {
-		InputBuffer = "R1:R(a, d); C2:C(d, b); L4:L(b, c);";			// For Testing only 
+		InputBuffer = "R1:R(a, d); C2:C(d, b); L4:L(b, c);";											// For Testing only 
 		cout << "Default: " << InputBuffer << endl << endl;
 	}
 	else cout << "Registered String:\t" << InputBuffer << endl << endl;
