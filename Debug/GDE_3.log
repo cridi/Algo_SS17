@@ -36,12 +36,12 @@ c:\users\knoedel\desktop\git\user.cpp(667): warning C4996: 'strcpy': This functi
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
 c:\users\knoedel\desktop\git\user.cpp(690): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
 c:\users\knoedel\desktop\git\user.cpp(695): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(752): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(759): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(796): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(784): warning C4101: "startpos": Unreferenzierte lokale Variable
-c:\users\knoedel\desktop\git\user.cpp(976): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-c:\users\knoedel\desktop\git\user.cpp(964): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\knoedel\desktop\git\user.cpp(765): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(772): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(812): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(800): warning C4101: "startpos": Unreferenzierte lokale Variable
+c:\users\knoedel\desktop\git\user.cpp(989): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\knoedel\desktop\git\user.cpp(977): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: Siehe Deklaration von "strcpy"
 c:\users\knoedel\desktop\git\user.cpp(179): warning C4715: "Is_serial_Pin": Nicht alle Codepfade geben einen Wert zurück.
 c:\users\knoedel\desktop\git\user.cpp(337): warning C4715: "SternFind": Nicht alle Codepfade geben einen Wert zurück.

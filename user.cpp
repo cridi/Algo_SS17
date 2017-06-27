@@ -712,58 +712,74 @@ void THE_ALGORITHM() {
 //USER FUNCTIONS
 void NetworkInput() {
 	/*********************************************************
-	Funktion zum Abfragen des Netzwerk-Strings in Form von 
-	"a:IN; b:Out; c: CMN; d,e: Internal;"
-	Funktion erfasst den String und entfernt alle Leerzeichen 
-	und gibt das Ergebnis als Return-Wert aus.
+	Funktion zum Auslesen einer Schaltungsdatei in Form von 
+
+	Nets: a:IN; b:Out; c: CMN; d,e: Internal;
+	R1:R ( a, d);
+	C2:C ( d, b);
+	L4:L ( b, c );
+
+	Funktion erfasst die Zeilen, speichert sie als Strings und 
+	entfernt alle Leerzeichen und gibt das Ergebnis als Return-Wert aus.
 	***********************************************************/
 	vector <string> InputBuffer;
 	string StreamBuffer;
 	string BauteilBuffer;
 	string NetzwerkBuffer;
-	string separator = ";\n";
-	string Token;
 
 	ifstream FILE;
+	string FilePath = "";
+												//Input von Path-String über Standard Eingabe
+	cout << "Enter Circuit File Path:" << endl;
+	getline(cin, FilePath);
 
-	FILE.open("C:/Users/Knoedel/Desktop/Schaltung.txt");
-																								//Input von Netzwerk-String über Standard Eingabe
-	//cout << "Enter String in Format: a:IN; b:Out; c: CMN; d,e: Internal;\n" << "Nets:\t";		//Disabled for Testing
-	//getline(cin, InputBuffer);
-	while (!FILE.eof()) {
+	//"C:/Users/Knoedel/Desktop/Schaltung.txt"
+	FILE.open(FilePath, fstream::in);									//Öffnen der Datei im Modus Lesen
+
+	while (!FILE.eof()) {												//Einlesen der Zeilen bis zum Ende der File
 		getline(FILE, StreamBuffer);
 		InputBuffer.push_back(StreamBuffer);
 	}
-	FILE.close();
 
-	NetzwerkBuffer = InputBuffer[0];
-	BauteilBuffer = InputBuffer[1] + InputBuffer[2] + InputBuffer[3];
+	NetzwerkBuffer = InputBuffer[0];									//Zeile fürs Netzwerk extrahieren
+	BauteilBuffer = InputBuffer[1] + InputBuffer[2] + InputBuffer[3];	//Zeilen für die Bauteile
 
-	if (NetzwerkBuffer == "") {
-		NetzwerkBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";										// For Testing only
+	if (FilePath == "") {
+		NetzwerkBuffer = "a:IN; b:Out; c: CMN; d,e: Internal;";						// For Testing only
 		cout << "Default: " << NetzwerkBuffer << endl << endl;
+
+		BauteilBuffer = "R1:R(a, d); C2:C(d, b); L4:L(b, c);";						// For Testing only 
+		cout << "No File found -> Default: " << BauteilBuffer << endl << endl;
 	}
-	else cout << "Registered String:\t" << NetzwerkBuffer << endl << endl;
+	else {
+		cout << "Registered String:\t" << NetzwerkBuffer << endl << endl;
+		cout << "Registered String:\t" << BauteilBuffer << endl << endl;
+	}
+
+	FILE.close();
 
 	SpaceLess.resize(2);
 	SpaceLess[0] = "";
 	SpaceLess[1] = "";
 
-	for (int spacepos = 0; spacepos < NetzwerkBuffer.size(); spacepos++) {									//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
+	for (int spacepos = 0; spacepos < NetzwerkBuffer.size(); spacepos++) {		//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
 		if (isspace(NetzwerkBuffer[spacepos])) {
 			spacepos++;
 			if (spacepos == NetzwerkBuffer.size()) break;
 		}
-		SpaceLess[0] = SpaceLess[0] + NetzwerkBuffer[spacepos];											//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
+		SpaceLess[0] = SpaceLess[0] + NetzwerkBuffer[spacepos];					//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
 	}	
-	for (int spacepos = 0; spacepos < BauteilBuffer.size(); spacepos++) {									//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
+	for (int spacepos = 0; spacepos < BauteilBuffer.size(); spacepos++) {		//Durchlaufen des Strings und bei Detektion eines Leerzeichen überspringen dieses 
 		if (isspace(BauteilBuffer[spacepos])) {
 			spacepos++;
 			if (spacepos == BauteilBuffer.size()) break;
 		}
-		SpaceLess[1] = SpaceLess[1] + BauteilBuffer[spacepos];											//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
+		SpaceLess[1] = SpaceLess[1] + BauteilBuffer[spacepos];					//Speichern der detetektierten Zeichen, da Leerzeichen überspringt werden, löschen sich diese heraus
 	}
 	//cout << SpaceLess << "\n";
+
+	NetworkToken = SpaceLess[0];												//Netzwerk String ohne Space zwischenspeichern
+	BauteilToken = SpaceLess[1];												//Bauteil String ohne Space zwischenspeichern
 
 	return;
 }
@@ -938,9 +954,6 @@ void user_main()
 
 			NetworkInput();			//Getting rid of spaces and cutting in blocks separated by ;
 			//BauteilToken = BauteilInput();
-
-			NetworkToken = SpaceLess[0];
-			BauteilToken = SpaceLess[1];
 
 			TokenNetwork(NetworkToken);				//Aufbau von Netzwerk und Bauteilen
 			TokenBauteil(BauteilToken);
