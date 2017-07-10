@@ -745,15 +745,15 @@ void NetworkInput() {
 	}
 	else if (FilePath == "Beispiel 1") {
 		cout << "Beispiel 1 wird ausgeführt: " << endl;
-		FilePath = "C:/Users/chris/Documents/Visual Studio 2017/Algo_SS17/Schaltung1.txt";
+		FilePath = "C:/Users/Knoedel/Desktop/Schaltungen/Schaltung_A.txt";
 	}
 	else if (FilePath == "Beispiel 2") {
 		cout << "Beispiel 2 wird ausgeführt:" << endl;
-		FilePath = "C:/Users/chris/Documents/Visual Studio 2017/Algo_SS17/Schaltung2.txt";
+		FilePath = "C:/Users/Knoedel/Desktop/Schaltungen/Schaltung_B.txt";
 	}
 	else if (FilePath == "Beispiel 3") {
 		cout << "Beispiel 3 wird ausgeführt:"<< endl;
-		FilePath = "C:/Users/chris/Documents/Visual Studio 2017/Algo_SS17/Schaltung3.txt";
+		FilePath = "C:/Users/Knoedel/Desktop/Schaltungen/Schaltung_C.txt";
 
 	}
 	else {
