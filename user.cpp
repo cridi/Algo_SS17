@@ -36,6 +36,7 @@ const int TOKENSTART = 300;
 //USER PROGRAMM
 vector<string>SpaceLess;
 string BauteilToken, NetworkToken;
+string OuterSternPins = "";
 
 class Network {
 	/*********************************************************
@@ -319,10 +320,12 @@ vector<Bauteil*> SternFind(vector<vector<Bauteil*>> AdjazenzMatrix, string Pins)
 			if (AdjazenzMatrix[i][outer] != NULL) {									//Überprüfung der Zeilen ob an Pin "outer" sich Bauteile befinden 
 				SternCounter++;
 				SternBauteile.push_back(AdjazenzMatrix[i][outer]);
+				OuterSternPins = OuterSternPins + Pins[i];
 			}
 			if (AdjazenzMatrix[outer][i] != NULL) {									//Überprüfung der Spalten ob an Pin "outer" sich Bauteile befinden
 				SternCounter++;
 				SternBauteile.push_back(AdjazenzMatrix[outer][i]);
+				OuterSternPins = OuterSternPins + Pins[i];
 			}
 		}
 
@@ -332,6 +335,7 @@ vector<Bauteil*> SternFind(vector<vector<Bauteil*>> AdjazenzMatrix, string Pins)
 				(Pins.substr(outer, 1) != Netzwerk.INPUT)) return SternBauteile;
 		}
 		SternCounter = 0;
+		OuterSternPins = "";
 		SternBauteile.clear();
 	}
 }
@@ -381,14 +385,14 @@ void SternAdjazenz() {
 	Pins.erase(Pins.find(SternPin), 1);							
 
 
-	string* ValueBauteile = new string[Pins.size()];
+	string* ValueBauteile = new string[OuterSternPins.size()];
 
 	for (int i = 0; i < SternBauteile.size(); i++) {									//Die Namen der Sternbauteile werden 
-		for (int ii = 0; ii < Pins.size(); ii++) {										//zwischengespeichert um Sie später als 
-			if (SternBauteile.at(i)->Pin1 == Pins.substr(ii, 1)) {						//Formel ausgeben zu können
+		for (int ii = 0; ii < OuterSternPins.size(); ii++) {										//zwischengespeichert um Sie später als 
+			if (SternBauteile.at(i)->Pin1 == OuterSternPins.substr(ii, 1)) {						//Formel ausgeben zu können
 				ValueBauteile[ii] = SternBauteile.at(i)->Name;
 			}
-			else if (SternBauteile.at(i)->Pin2 == Pins.substr(ii, 1)) { 
+			else if (SternBauteile.at(i)->Pin2 == OuterSternPins.substr(ii, 1)) {
 				ValueBauteile[ii] = SternBauteile.at(i)->Name;
 			}
 		}
@@ -402,16 +406,16 @@ void SternAdjazenz() {
 
 
 	Bauteile.push_back(new Bauteil("ZD" + 
-		Pins.substr(0, 1) + 
-		Pins.substr(1, 1), "Z",
-		Pins.substr(0, 1), 
-		Pins.substr(1, 1)));
+		OuterSternPins.substr(0, 1) +
+		OuterSternPins.substr(1, 1), "Z",
+		OuterSternPins.substr(0, 1),
+		OuterSternPins.substr(1, 1)));
 
-	cout << "Zusammenfassung: " << "ZD" + Pins.substr(0, 1) + Pins.substr(1, 1) << " = "		//Ausgabe nach Formel der 
+	cout << "Zusammenfassung: " << "ZD" + OuterSternPins.substr(0, 1) + OuterSternPins.substr(1, 1) << " = "		//Ausgabe nach Formel der 
 		<< ValueBauteile[0] << " + " << ValueBauteile[1] << " + " << "(" <<						//Stern Dreieck Wandlung 
 		ValueBauteile[0] << "*"	<< ValueBauteile[1] << ")" << "/" << ValueBauteile[2] << endl;
 
-	string BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(1, 1) +" = " +					//Dafür wird Speicherplatz freigegeben 
+	string BufferStr = "ZD" + OuterSternPins.substr(0, 1) + OuterSternPins.substr(1, 1) +" = " +					//Dafür wird Speicherplatz freigegeben 
 		ValueBauteile[0] + " + " + ValueBauteile[1] + " + " + "(" + ValueBauteile[0] + "*" +	//Und der konvertierte String hinkopiert
 		ValueBauteile[1] + ")" + "/" + ValueBauteile[2];										//Anschließend kann die Adresse an die graf Ausg.
 		ValueBauteile[1] + ")" + "/" + ValueBauteile[2];										//übergeben werden.
@@ -428,16 +432,16 @@ void SternAdjazenz() {
 	********************************************************/
 
 	Bauteile.push_back(new Bauteil("ZD" + 
-		Pins.substr(0, 1) + 
-		Pins.substr(2, 1), "Z",
-		Pins.substr(0, 1), 
-		Pins.substr(2, 1)));
+		OuterSternPins.substr(0, 1) +
+		OuterSternPins.substr(2, 1), "Z",
+		OuterSternPins.substr(0, 1),
+		OuterSternPins.substr(2, 1)));
 
-	cout << "Zusammenfassung: " << "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) << " = " << 
+	cout << "Zusammenfassung: " << "ZD" + OuterSternPins.substr(0, 1) + OuterSternPins.substr(2, 1) << " = " <<
 		ValueBauteile[0] << " + " << ValueBauteile[2] << " + " << "(" << 
 		ValueBauteile[0] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[1] << endl;
 
-	BufferStr = "ZD" + Pins.substr(0, 1) + Pins.substr(2, 1) + " = " + 
+	BufferStr = "ZD" + OuterSternPins.substr(0, 1) + OuterSternPins.substr(2, 1) + " = " +
 		ValueBauteile[0] + " + " + ValueBauteile[2] + " + " +"(" + 
 		ValueBauteile[0] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[1];
 
@@ -452,16 +456,16 @@ void SternAdjazenz() {
 	********************************************************/
 
 	Bauteile.push_back(new Bauteil("ZD" + 
-		Pins.substr(1, 1) + 
-		Pins.substr(2, 1), "Z",
-		Pins.substr(1, 1), 
-		Pins.substr(2, 1)));
+		OuterSternPins.substr(1, 1) +
+		OuterSternPins.substr(2, 1), "Z",
+		OuterSternPins.substr(1, 1),
+		OuterSternPins.substr(2, 1)));
 
-	cout << "Zusammenfassung: " << "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) <<" = " << 
+	cout << "Zusammenfassung: " << "ZD" + OuterSternPins.substr(1, 1) + OuterSternPins.substr(2, 1) <<" = " <<
 		ValueBauteile[1] << " + " << ValueBauteile[2] << " + " <<"(" << 
 		ValueBauteile[1] << "*" << ValueBauteile[2] << ")" << "/" << ValueBauteile[0] << endl;
 
-	BufferStr = "ZD" + Pins.substr(1, 1) + Pins.substr(2, 1) + " = " + 
+	BufferStr = "ZD" + OuterSternPins.substr(1, 1) + OuterSternPins.substr(2, 1) + " = " +
 		ValueBauteile[1] + " + " + ValueBauteile[2] + " + " + "(" + 
 		ValueBauteile[1] + "*" + ValueBauteile[2] + ")" + "/" + ValueBauteile[0];
 
@@ -683,7 +687,7 @@ void THE_ALGORITHM() {
 	GraphicOutput.push_back("********************************");
 	GraphicOutput.push_back("");
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 10; i++) {
 
 		for (int SerialParallel = 0; SerialParallel < 5; SerialParallel++) {
 
@@ -947,7 +951,9 @@ void Restart()
 		printf(".");
 		if (StopProcess())break;
 	};
-
+	GraphicOutput.clear();
+	Bauteile.clear();
+	
 	printf("######################################\n\n");
 	clrscr();
 	printf("######################################\n\n");
