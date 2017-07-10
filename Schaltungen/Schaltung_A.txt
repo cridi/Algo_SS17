@@ -1,0 +1,4 @@
+Nets: a:IN; b:Out; c: CMN; d,e,f,g: Internal;
+R1:R ( a, d);R2:R ( d, e);R3:R ( g, b);R4:R ( b, c);
+C1:C ( a, d);C2:C ( g, b);C3:C ( d, f);
+L1:L ( e, c);L2:L ( f, c);L3:L ( d, g);L4:L ( g, b);
