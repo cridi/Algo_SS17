@@ -749,15 +749,15 @@ void NetworkInput() {
 	}
 	else if (FilePath == "Beispiel 1") {
 		cout << "Beispiel 1 wird ausgeführt: " << endl;
-		FilePath = "C:/Users/Knoedel/Desktop/Schaltungen/Schaltung_A.txt";
+		FilePath = "C:/Users/Knoedel/Desktop/git/Schaltungen/Schaltung_A.txt";
 	}
 	else if (FilePath == "Beispiel 2") {
 		cout << "Beispiel 2 wird ausgeführt:" << endl;
-		FilePath = "C:/Users/Knoedel/Desktop/Schaltungen/Schaltung_B.txt";
+		FilePath = "C:/Users/Knoedel/Desktop/git/Schaltungen/Schaltung_B.txt";
 	}
 	else if (FilePath == "Beispiel 3") {
 		cout << "Beispiel 3 wird ausgeführt:"<< endl;
-		FilePath = "C:/Users/Knoedel/Desktop/Schaltungen/Schaltung_C.txt";
+		FilePath = "C:/Users/Knoedel/Desktop/git/Schaltungen/Schaltung_C.txt";
 
 	}
 	else {
