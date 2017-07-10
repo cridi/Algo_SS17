@@ -730,7 +730,7 @@ void NetworkInput() {
 	ifstream FILE;
 	string FilePath = "";
 																				//Input von Path-String über Standard Eingabe
-	cout << "Enter Circuit File Path:" << endl;
+	cout << "Enter Circuit File Path or \"Beispiel 1-3\" for example Circuits:" << endl;
 	getline(cin, FilePath);
 
 	//"C:/Users/Knoedel/Desktop/Schaltung.txt"
@@ -956,7 +956,7 @@ void Restart()
 void user_main()
 {
 	int ww, hh;
-	set_windowpos(0, 0, 1200, 800);
+	set_windowpos(0, 0, 1200, 600);
 
 	while (1) {								// Endlosschleife
 
@@ -982,8 +982,8 @@ void user_main()
 
 		SetGraphicWindowTop();
 
-		int height = 10;
-		int width = hh / 2;
+		int height = 80;
+		int width = 10;
 
 		if (Bauteile.size() >= 2 && InputImpedanz() != NULL) {
 
@@ -1005,11 +1005,10 @@ void user_main()
 
 		for (int i = 0; i < GraphicOutput.size(); i++) {
 			text(width, height, 15, BLACK, GraphicOutput.at(i));
-
 			height += 15;
-			if (height > hh) {
-				height = 10;
-				width += 50;
+			if (height > hh-20) {
+				height = 80;
+				width += 300;
 			}
 		}
 
